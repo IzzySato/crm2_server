@@ -21,7 +21,7 @@ require('./middlewares/passport.js');
 
 app.use(cookieSession({
   name: 'session',
-  keys: ['crm_v2_key'],
+  keys: [process.env.SESSION_SECRET],
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 

@@ -1,16 +1,20 @@
-const logger = require("../../../lib/logger");
-const User = require("../../models/User");
-const { getInvitationByEmail } = require("../invitation");
+const logger = require('../../../lib/logger');
+const User = require('../../models/User');
+const { getInvitationByEmail } = require('../invitation');
 
-const findOrCreate = ({ id, name: { familyName, givenName }, emails }) => {
+const findOrCreate = async ({
+  id,
+  name: { familyName, givenName },
+  emails,
+}) => {
   try {
-    const user = User.findOne({ email: emails[0].value });
+    const user = await User.findOne({ email: emails[0].value });
     if (user) {
-      return user;
+      return { userFound: true, user };
     } else {
-      const invitation = getInvitationByEmail(emails[0].value);
+      const invitation = await getInvitationByEmail(emails[0].value);
       const isValid = invitation && invitation.expirationDate > Date.now();
-      User.create({
+      const createdUser = await User.create({
         firstName: givenName,
         lastName: familyName,
         companyId: isValid ? invitation.companyId : null,
@@ -18,12 +22,13 @@ const findOrCreate = ({ id, name: { familyName, givenName }, emails }) => {
         authProviderId: id,
         permissions: isValid ? invitation.permissions : null,
         isLocked: !isValid,
-        active: isValid
+        active: isValid,
       });
+      return { message: 'User Created', user: createdUser };
     }
   } catch (error) {
     logger.error(error.toString());
   }
 };
 
-module.exports = { findOrCreate }
+module.exports = { findOrCreate };

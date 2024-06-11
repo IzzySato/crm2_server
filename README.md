@@ -14,3 +14,7 @@
 
 ## To Stop Redis
 'brew services stop redis' 
+
+## Test
+- Jest
+- 'npm test' to start

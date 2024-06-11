@@ -1,7 +1,7 @@
 const Invitation = require("../../models/Invitation");
 
-const getInvitationByEmail = (email) => {
-  return Invitation.findOne({ email });
+const getInvitationByEmail = async (email) => {
+  return await Invitation.findOne({ email });
 };
 
 module.exports = {

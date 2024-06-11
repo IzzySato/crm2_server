@@ -1,6 +1,6 @@
 const logger = require("../../../lib/logger");
 const User = require("../../models/User");
-const { getInvitationByEmail } = require("../invitation/__tests__");
+const { getInvitationByEmail } = require("../invitation");
 
 const findOrCreate = ({ id, name: { familyName, givenName }, emails }) => {
   try {

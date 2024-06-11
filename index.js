@@ -4,8 +4,8 @@ const createError = require('http-errors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
-const addressRouter = require('./routes/address.js');
-const authRouter = require('./routes/auth.js');
+const addressRouter = require('./routes/address/index.js');
+const authRouter = require('./routes/auth/index.js');
 const { dbConnect } = require('./database/db_config.js');
 const logger = require('./lib/logger.js');
 const passport = require('passport');

@@ -1,4 +1,4 @@
-const Invitation = require("../../../models/Invitation");
+const Invitation = require("../../models/Invitation");
 
 const getInvitationByEmail = (email) => {
   return Invitation.findOne({ email });

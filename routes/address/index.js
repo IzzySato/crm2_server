@@ -1,7 +1,7 @@
 const express = require('express');
-const { getAddressById, addAddresses, addAddress } = require('../database/engine/address/index');
+const { getAddressById, addAddresses, addAddress } = require('../../database/engine/address/index');
 const router = express.Router();
-const cleanCache = require('../middlewares/cleanCache');
+const cleanCache = require('../../middlewares/cleanCache');
 
 router.get('/', async (req, res, next) => {
   const data = [];

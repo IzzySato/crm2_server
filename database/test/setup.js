@@ -4,26 +4,34 @@ const logger = require('../../lib/logger');
 
 dotenv.config();
 
-const setupDatabase = () => {
-  /* Connecting to the database before each test. */
-  beforeEach(async () => {
-    try {
-      await mongoose.connect(process.env.DB_TEST_URI);
-    } catch (error) {
-      logger.error(error.toString());
-    }
-  });
-
-  /* Closing database connection after each test. */
-  afterEach(async () => {
-    try {
-      await mongoose.connection.dropDatabase();
-    } catch (error) {
-      logger.error(error.toString());
-    } finally {
-      await mongoose.connection.close();
-    }
-  });
+const setup = {
+  beforeAll: () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await mongoose.connect(process.env.DB_TEST_URI);
+        resolve();
+      } catch (error) {
+        logger.error(error.toString());
+        reject(error);
+      }
+    });
+  },
+  afterAll: () => {
+    return new Promise(async (resolve, reject) => {
+      let err = undefined;
+      try {
+        await mongoose.connection.dropDatabase();
+      } catch (error) {
+        err = error;
+        logger.error(error.toString());
+      } finally {
+        await mongoose.connection.close();
+        (err) ? reject(err) : resolve();
+      }
+    });
+  },
 };
 
-module.exports = setupDatabase;
+module.exports = {
+  setup,
+};

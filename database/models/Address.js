@@ -1,17 +1,5 @@
 const mongoose = require('mongoose');
 
-/**
- * example
- * name: prime, work, etc.
- * line1: 123 main street
- * line2: optional
- * city: Vancouver
- * province: BC
- * postcode: V3J 1G8
- * active: true / false -> if active: false, not display
- * default: true / false -> if default: true, used for display
- */
-
 const AddressSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -39,6 +27,14 @@ const AddressSchema = new mongoose.Schema({
   },
   default: {
     type: Boolean,
+  },
+  createdAt: {
+    type: String,
+    default: Date.now(),
+  },
+  deletedAt: {
+    type: String,
+    default: null,
   },
 });
 

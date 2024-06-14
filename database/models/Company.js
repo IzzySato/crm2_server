@@ -22,13 +22,14 @@ const CompanySchema = new mongoose.Schema({
     availableTags: {
         type: [String],
     },
-    isLocked: {
-        type: Boolean,
+    createdAt: {
+        type: String,
+        default: Date.now(),
     },
-    date: {
-        type:String,
-        default:Date.now(),
-    },
+    deletedAt: {
+        type: String,
+        default: null
+    }
 });
 
 module.exports =  mongoose.model('Company', CompanySchema);

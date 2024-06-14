@@ -17,7 +17,6 @@ router.get('/login/fail', async (req, res, next) => {
 });
 
 router.get('/login/success', async (req, res, next) => {
-  console.log(req)
   if (req.user) {
     res.status(200).json({
       error: false,

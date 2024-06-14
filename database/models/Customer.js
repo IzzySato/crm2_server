@@ -31,10 +31,14 @@ const CustomerSchema = new mongoose.Schema({
     active: {
         type: Boolean,
     },
-    date: {
+    createdAt: {
         type: String,
-        default: Date.now(),
+        default:Date.now(),
     },
+    deletedAt: {
+        type: String,
+        default: null
+    }
 });
 
 // case insensitive index

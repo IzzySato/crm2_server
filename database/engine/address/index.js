@@ -3,17 +3,10 @@ const Address = require('../../models/Address');
 
 const addAddress = async (address) => {
   try {
-    return await Address.create(address);
+    address = (Array.isArray(address)) ? address: [address]
+    return await Address.insertMany(address);
   } catch (error) {
-    logger.error(error);
-  }
-};
-
-const addAddresses = async (addresses) => {
-  try {
-    return await Address.insertMany(addresses);
-  } catch (error) {
-    logger.error(error);
+    logger.error(error.toString());
   }
 };
 
@@ -21,9 +14,8 @@ const getAddressById = async (id, isCache = false) => {
   try {
     return isCache ? await Address.findOne({ _id: id }).cache(id) : await Address.findOne({ _id: id });
   } catch (error) {
-    console.log(error);
-    logger.error(error);
+    logger.error(error.toString());
   }
 };
 
-module.exports = { addAddresses, getAddressById, addAddress };
+module.exports = { getAddressById, addAddress };

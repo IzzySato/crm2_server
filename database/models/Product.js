@@ -20,6 +20,14 @@ const ProductSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Company',
   },
+  createdAt: {
+    type: String,
+    default: Date.now(),
+  },
+  deletedAt: {
+    type: String,
+    default: null,
+  },
   productType: mongoose.Schema.Types.Mixed,
   pricing: mongoose.Schema.Types.Mixed,
 });

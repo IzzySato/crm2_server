@@ -33,6 +33,14 @@ const InvoiceSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company'
     },
+    createdAt: {
+        type: String,
+        default: Date.now(),
+    },
+    deletedAt: {
+        type: String,
+        default: null
+    }
 });
 
 module.exports = mongoose.model('Invoice', InvoiceSchema);

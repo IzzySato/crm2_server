@@ -1,22 +1,28 @@
 const { describe, expect, test } = require('@jest/globals');
-const mongoose = require('mongoose');
 const request = require('supertest');
-const dotenv = require('dotenv');
-
-dotenv.config();
-
-/* Connecting to the database before each test. */
-beforeEach(async () => {
-  await mongoose.connect(process.env.DB_TEST_URI);
-});
-
-/* Closing database connection after each test. */
-afterEach(async () => {
-  await mongoose.connection.close();
-});
 
 describe('Test Authentication', () => {
-  test('GET /google', () => {
+  test('GET /google', async () => {
+    // const newUser = {
+    //   id: '',
+    //   name: {
+    //     familyName: 'test',
+    //     givenName: 'test',
+    //   },
+    //   emails: [
+    //     {
+    //       value: 'test.test@mail.com',
+    //     },
+    //   ],
+    // };
+    // const { _id } = await User.create(newUser);
+    // const Buffer = require('safe-buffer').Buffer;
+    // const sessionObject = {
+    //   passport: {
+    //     user: _id.toString()
+    //   }
+    // };
+    // const sessionString = Buffer.from(JSON.stringify(sessionObject));
     expect(0).toBe(0);
     // TODO 
     // const res = await request(process.env.SERVER_URL).get('/');

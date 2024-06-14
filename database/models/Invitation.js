@@ -22,9 +22,13 @@ const InvitationSchema = new mongoose.Schema({
   permissions: {
     type: [String],
   },
-  date: {
+  createdAt: {
     type: String,
     default: Date.now(),
+  },
+  deletedAt: {
+    type: String,
+    default: null,
   },
 });
 

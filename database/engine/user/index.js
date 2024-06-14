@@ -2,6 +2,7 @@ const logger = require('../../../lib/logger');
 const User = require('../../models/User');
 const { getInvitationByEmail } = require('../invitation');
 
+// Google OAuth
 const findOrCreate = async ({
   id,
   name: { familyName, givenName },
@@ -31,4 +32,16 @@ const findOrCreate = async ({
   }
 };
 
-module.exports = { findOrCreate };
+const addUser = async (user) => {
+  try {
+    user = Array.isArray(user) ? user : [user];
+    return await User.insertMany(user);
+  } catch (error) {
+    logger.error(error.toString());
+  }
+};
+
+module.exports = {
+  findOrCreate,
+  addUser,
+ };

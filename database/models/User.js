@@ -23,9 +23,6 @@ const UserSchema = new mongoose.Schema({
   permissions: {
     type: [String],
   },
-  isLocked: {
-    type: Boolean,
-  },
   active: {
     type: Boolean,
   },
@@ -33,8 +30,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: Date.now(),
   },
+  createdAt: {
+    type: String,
+    default: Date.now(),
+  },
+  deletedAt: {
+    type: String,
+    default: null,
+  },
 });
-
-UserSchema.index({ authProviderId: 1 }, { unique: true });
 
 module.exports = mongoose.model('user', UserSchema);

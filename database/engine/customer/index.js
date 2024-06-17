@@ -1,3 +1,4 @@
+'use strict';
 const logger = require('../../../lib/logger');
 const Customer = require('../../models/Customer');
 const { convertIdStringToObjectId } = require('../utils/convertObjectId');
@@ -23,18 +24,30 @@ const addCustomer = async (customer) => {
         companyId: convertIdStringToObjectId(customer.companyId),
       };
     }
-    // customer = Array.isArray(customer) ? customer : [customer];
-    return await Customer.insertMany(customer);
+    const data = await Customer.insertMany(customer);
+    return {
+      total: data.length,
+      data
+    }
   } catch (error) {
     logger.error(error.toString());
   }
 };
 
-const getCustomers = async ({ pageNum = 1, length = 10, sortBy = 'id' }) => {
+const updateCustomer = async (findField, updateField) => {
   try {
-    return await Customer.find().sort(sortBy)
-      .skip(length * pageNum)
-      .limit(length);
+    return await Customer.updateOne(findField, updateField);
+  } catch (error) {
+    logger.error(error.toString());
+  }
+};
+
+const getCustomers = async ({ pageNum = 1, length = 10, sortBy = '_id' }) => {
+  try {
+    return await Customer.where({ deletedAt: null })
+                        .skip((pageNum - 1) * length)
+                        .sort(sortBy)
+                        .limit(length);
   } catch (error) {
     logger.error(error.toString());
   }
@@ -50,4 +63,4 @@ const getCustomerById = async (id, isCache = false) => {
   }
 };
 
-module.exports = { addCustomer, getCustomerById, getCustomers };
+module.exports = { addCustomer, getCustomerById, getCustomers, updateCustomer };

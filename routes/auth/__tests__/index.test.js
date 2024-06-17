@@ -1,3 +1,4 @@
+'use strict';
 const { describe, expect, test } = require('@jest/globals');
 const request = require('supertest');
 const User = require('../../../database/models/User');
@@ -32,7 +33,6 @@ describe('Test Authentication', () => {
       'base64'
     );
     const sig = keygrip.sign('session=' + sessionString);
-    console.log(sessionString, sig);
 
     // await request(process.env.SERVER_URL).get('/').expect(200).setCookie()
     // await page.setCookie({

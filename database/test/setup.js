@@ -1,6 +1,8 @@
+'use strict';
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const logger = require('../../lib/logger');
+const { dbTestUri } = require('../../config/dev');
 
 dotenv.config();
 
@@ -8,7 +10,7 @@ const setup = {
   beforeAll: () => {
     return new Promise(async (resolve, reject) => {
       try {
-        await mongoose.connect(process.env.DB_TEST_URI);
+        await mongoose.connect(dbTestUri);
         resolve();
       } catch (error) {
         logger.error(error.toString());

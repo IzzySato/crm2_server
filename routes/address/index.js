@@ -1,3 +1,4 @@
+'use strict';
 const express = require('express');
 const { getAddressById, addAddress } = require('../../database/engine/address/index');
 const router = express.Router();

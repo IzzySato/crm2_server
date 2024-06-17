@@ -1,3 +1,4 @@
+'use strict';
 const passport = require('passport');
 const { findOrCreate } = require('../database/engine/user');
 const User = require('../database/models/User');

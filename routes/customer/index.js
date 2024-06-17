@@ -1,5 +1,6 @@
+'use strict';
 const express = require('express');
-const { getCustomers, addCustomer } = require('../../database/engine/customer');
+const { getCustomers, addCustomer, updateCustomer } = require('../../database/engine/customer');
 const Customer = require('../../database/models/Customer');
 const router = express.Router();
 
@@ -13,13 +14,19 @@ router.get('/', async (req, res) => {
     pageNum: params.pageNum || 1,
     sortBy: params.sortBy || 'id',
     data: customers
-  })
+  });
 });
 
 router.post('/', async (req, res) => {
   const customer = req.body;
-  const customers = await addCustomer(customer);
-  return res.json(customers)
+  const result = await addCustomer(customer);
+  return res.json(result);
+});
+
+router.put('/', async (req, res) => {
+  const { findField, updateField } = req.body;
+  const result = await updateCustomer(findField, updateField );
+  return res.json(result);
 });
 
 

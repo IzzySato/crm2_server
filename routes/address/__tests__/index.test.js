@@ -1,3 +1,4 @@
+'use strict';
 const { describe, test } = require('@jest/globals');
 const request = require('supertest');
 const dotenv = require('dotenv');

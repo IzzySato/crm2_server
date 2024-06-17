@@ -1,3 +1,4 @@
+'use strict';
 const { clearHash } = require("../lib/cache");
 
 module.exports = async (req, res, next) => {

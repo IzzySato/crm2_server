@@ -1,19 +1,24 @@
+'use strict';
 const { describe, expect, test } = require('@jest/globals');
 const { addCompany } = require('..');
 const { setup } = require('../../../test/setup');
-const { ObjectId } = require('mongodb');
+const Company = require('../../../models/Company');
+const { company } = require('../../../test/testData/companyData');
 
 describe('Test Company Database Functions', () => {
   beforeAll(setup.beforeAll);
   afterAll(setup.afterAll);
+  afterEach(() => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await Company.deleteMany({});
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    })
+  });
   test('add a new company', async () => {
-    const company = {
-      businessName: 'test company name',
-      logoImg: null,
-      addressIds: [new ObjectId('51e0373c6f35bd826f47e9a1')],
-      phone: '123-456-2456',
-      tradeType: ['concrete']
-    };
     const result = await addCompany(company);
     expect(result[0].businessName).toBe(company.businessName);
   });

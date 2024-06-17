@@ -1,3 +1,4 @@
+'use strict';
 const logger = require('../../../lib/logger');
 const Invitation = require('../../models/Invitation');
 

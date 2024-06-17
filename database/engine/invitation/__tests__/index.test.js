@@ -17,14 +17,16 @@ describe('Invitation Model', () => {
   };
 
   test('get invitation by email', async () => {
-    await Invitation.create(invitation)
+    await Invitation.create(invitation);
     const result = await getInvitationByEmail('test@mail.com');
+    console.log(result);
     expect(result.permissions[0]).toBe('read');
     expect(result.permissions[1]).toBe('write');
   });
 
   test('add an invitation', async () => {
     const result = await addInvitation(invitation);
+    console.log(result);
     expect(result[0].permissions[0]).toBe('read');
     expect(result[0].permissions[1]).toBe('write');
   });

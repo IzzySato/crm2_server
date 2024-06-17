@@ -28,12 +28,9 @@ const CustomerSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company',
     },
-    active: {
-        type: Boolean,
-    },
     createdAt: {
         type: String,
-        default:Date.now(),
+        default: Date.now(),
     },
     deletedAt: {
         type: String,

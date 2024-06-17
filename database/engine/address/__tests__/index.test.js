@@ -53,6 +53,7 @@ describe('Test Address Database Functions', () => {
   test('get an address by id', async () => {
     const { _id } = await Address.create(newAddress);
     const result = await getAddressById(_id);
+    console.log(result);
     expect(result.line1).toBe('11 main street');
   });
 });

@@ -10,29 +10,20 @@ router.get('/google/callback', passport.authenticate('google', {
 }));
 
 router.get('/login/fail', async (req, res, next) => {
-  res.status(401).json({
-    error: true,
-    message: 'Login failure',
-  });
+  res.status(401).redirect(`${process.env.CLIENT_URL}/login_fail`);
 });
 
 router.get('/login/success', async (req, res, next) => {
   if (req.user) {
-    res.status(200).json({
-      error: false,
-      message: 'Successfully Login',
-    });
+    res.status(200).redirect(`${process.env.CLIENT_URL}`);
   } else {
-    res.status(403).json({
-      error: true,
-      message: 'Not Authorized',
-    });
+    res.status(401).redirect(`${process.env.CLIENT_URL}/login_fail`);
   }
 });
 
 router.get('/logout', (req, res) => {
   req.logout();
-  res.redirect(process.env.CLIENT_URL);
+  res.status(200).redirect(`${process.env.CLIENT_URL}/login`);
 });
 
 module.exports = router;

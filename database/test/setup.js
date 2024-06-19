@@ -11,6 +11,7 @@ const setup = {
     return new Promise(async (resolve, reject) => {
       try {
         await mongoose.connect(dbTestUri);
+        logger.info('connected');
         resolve();
       } catch (error) {
         logger.error(error.toString());

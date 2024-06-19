@@ -1,7 +1,12 @@
 'use strict';
 const { describe, expect, test } = require('@jest/globals');
 const { setup } = require('../../../test/setup');
-const { addCustomer, getCustomerById, updateCustomer, getCustomers } = require('..');
+const {
+  addCustomer,
+  getCustomerById,
+  updateCustomer,
+  getCustomers,
+} = require('..');
 const { customers, customer } = require('../../../test/testData/customerData');
 const Customer = require('../../../models/Customer');
 
@@ -16,7 +21,7 @@ describe('Customer Model', () => {
       } catch (error) {
         reject(error);
       }
-    })
+    });
   });
 
   test('get customer by id', async () => {
@@ -40,7 +45,12 @@ describe('Customer Model', () => {
     const addedCustomers = await addCustomer(customers);
     expect(addedCustomers.total).toBe(19);
     // Filtered out if deletedAt is not null
-    const result = await getCustomers({ pageNum: 1, length: 10, sortBy: 'firstName'});
+    const result = await getCustomers({
+      pageNum: 1,
+      length: 10,
+      sortBy: 'firstName',
+      fields: 'firstName lastName email phone _id'
+    });
     expect(result.length).toBe(10);
     expect(result[0].firstName).toBe('Barbara');
   });
@@ -55,7 +65,7 @@ describe('Customer Model', () => {
   test('update a customer', async () => {
     const addedCustomer = await addCustomer(customer);
     const id = addedCustomer.data[0]._id.toString();
-    const result = await updateCustomer({ _id: id }, { firstName: 'Ben'});
+    const result = await updateCustomer(id, { firstName: 'Ben' });
     expect(result.modifiedCount).toBe(1);
   });
 
@@ -63,7 +73,7 @@ describe('Customer Model', () => {
     const addedCustomer = await addCustomer(customer);
     const id = addedCustomer.data[0]._id.toString();
     const today = new Date();
-    const result = await updateCustomer({ _id: id }, { deletedAt: today });
+    const result = await updateCustomer( id, { deletedAt: today });
     expect(result.modifiedCount).toBe(1);
   });
 });

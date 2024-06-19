@@ -27,27 +27,33 @@ const addCustomer = async (customer) => {
     const data = await Customer.insertMany(customer);
     return {
       total: data.length,
-      data
-    }
+      data,
+    };
   } catch (error) {
     logger.error(error.toString());
   }
 };
 
-const updateCustomer = async (findField, updateField) => {
+const updateCustomer = async (_id, updateField) => {
   try {
-    return await Customer.updateOne(findField, updateField);
+    return await Customer.updateOne({ _id }, updateField);
   } catch (error) {
     logger.error(error.toString());
   }
 };
 
-const getCustomers = async ({ pageNum = 1, length = 10, sortBy = '_id' }) => {
+const getCustomers = async ({
+  pageNum = 1,
+  length = 10,
+  sortBy = '_id',
+  fields = 'firstName lastName email phone _id',
+}) => {
   try {
     return await Customer.where({ deletedAt: null })
-                        .skip((pageNum - 1) * length)
-                        .sort(sortBy)
-                        .limit(length);
+      .skip((pageNum - 1) * length)
+      .sort(sortBy)
+      .limit(length)
+      .select(fields);
   } catch (error) {
     logger.error(error.toString());
   }

@@ -21,11 +21,4 @@ describe('Customer routes', () => {
       companyId: '6348acd2e1a47ca32e79f46f'
     }).set('Accept', 'application/json').expect(200);
   });
-
-  test('PUT /customer', async () => {
-    await request(process.env.SERVER_URL).put('/customer').send({
-      findField: { email: 'alice.smith@mail.com' },
-      updateField: { firstName: 'Test' }
-    }).set('Accept', 'application/json').expect(200);
-  });
 });

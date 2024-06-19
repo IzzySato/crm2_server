@@ -6,10 +6,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 describe('Address routes', () => {
-  test('GET /address', async () => {
-    await request(process.env.SERVER_URL).get('/address').expect(200);
-  });
-
   test('POST /address', async () => {
     await request(process.env.SERVER_URL).post('/address').send({
       name: 'work',

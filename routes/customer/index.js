@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   const query = req.query;
-  const customers = await getCustomers(query);
+  const customers = await getCustomers(query, { isCache: true });
   const total = await Customer.countDocuments();
   res.json({
     total,
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const id = req.params.id;
-  const result = await getCustomerById(id);
+  const result = await getCustomerById(id, { isCache: true });
   res.json(result);
 });
 

@@ -27,7 +27,7 @@ describe('Customer Model', () => {
   test('get customer by id', async () => {
     const addedCustomer = await addCustomer(customer);
     const id = addedCustomer.data[0]._id.toString();
-    const result = await getCustomerById(id);
+    const result = await getCustomerById(id, { isCache: false });
     expect(result.firstName).toBe(customer.firstName);
   });
 
@@ -36,7 +36,7 @@ describe('Customer Model', () => {
     expect(addedCustomers.total).toBe(19);
     // Filtered out if deletedAt is not null
     // Default to return first 10
-    const result = await getCustomers({});
+    const result = await getCustomers({}, { isCache: false });
     expect(result.length).toBe(10);
     expect(result[0].firstName).toBe('Liam');
   });
@@ -50,7 +50,7 @@ describe('Customer Model', () => {
       length: 10,
       sortBy: 'firstName',
       fields: 'firstName lastName email phone _id'
-    });
+    }, { isCache: false });
     expect(result.length).toBe(10);
     expect(result[0].firstName).toBe('Barbara');
   });

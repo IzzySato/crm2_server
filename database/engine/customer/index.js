@@ -42,24 +42,48 @@ const updateCustomer = async (_id, updateField) => {
   }
 };
 
-const getCustomers = async ({
-  pageNum = 1,
-  length = 10,
-  sortBy = '_id',
-  fields = 'firstName lastName email phone _id',
-}) => {
+const getCustomers = async (
+  {
+    pageNum = 1,
+    length = 10,
+    sortBy = '_id',
+    fields = 'firstName lastName email phone _id',
+    searchBy = '',
+  },
+  { isCache = false }
+) => {
   try {
-    return await Customer.where({ deletedAt: null })
-      .skip((pageNum - 1) * length)
-      .sort(sortBy)
-      .limit(length)
-      .select(fields);
+    const findObj =
+      searchBy === ''
+        ? {}
+        : {
+            $or: [
+              { firstName: { $regex: searchBy, $options: 'i' } },
+              { lastName: { $regex: searchBy, $options: 'i' } },
+              { email: { $regex: searchBy, $options: 'i' } },
+              { phone: { $regex: searchBy, $options: 'i' } },
+            ],
+          };
+    return isCache
+      ? await Customer.where({ deletedAt: null })
+          .find(findObj)
+          .skip((pageNum - 1) * length)
+          .sort(sortBy)
+          .limit(length)
+          .select(fields)
+          .cache('customers')
+      : await Customer.where({ deletedAt: null })
+          .find(findObj)
+          .skip((pageNum - 1) * length)
+          .sort(sortBy)
+          .limit(length)
+          .select(fields);
   } catch (error) {
     logger.error(error.toString());
   }
 };
 
-const getCustomerById = async (id, isCache = false) => {
+const getCustomerById = async (id, { isCache = false }) => {
   try {
     return isCache
       ? await Customer.findOne({ _id: id }).cache(id)

@@ -12,9 +12,6 @@ const JobSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    openDate: {
-        type: Date
-    },
     startDate: {
         type: Date
     },

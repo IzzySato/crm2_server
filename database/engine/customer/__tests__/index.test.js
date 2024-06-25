@@ -37,8 +37,8 @@ describe('Customer Model', () => {
     // Filtered out if deletedAt is not null
     // Default to return first 10
     const result = await getCustomers({}, { isCache: false });
-    expect(result.length).toBe(10);
-    expect(result[0].firstName).toBe('Liam');
+    expect(result.data.length).toBe(10);
+    expect(result.data[0].firstName).toBe('Liam');
   });
 
   test('get customers with params', async () => {
@@ -51,8 +51,8 @@ describe('Customer Model', () => {
       sortBy: 'firstName',
       fields: 'firstName lastName email phone _id'
     }, { isCache: false });
-    expect(result.length).toBe(10);
-    expect(result[0].firstName).toBe('Barbara');
+    expect(result.data.length).toBe(10);
+    expect(result.data[0].firstName).toBe('Barbara');
   });
 
   test('add a customer', async () => {

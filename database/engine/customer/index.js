@@ -64,20 +64,20 @@ const getCustomers = async (
               { phone: { $regex: searchBy, $options: 'i' } },
             ],
           };
-    return isCache
-      ? await Customer.where({ deletedAt: null })
-          .find(findObj)
-          .skip((pageNum - 1) * length)
-          .sort(sortBy)
-          .limit(length)
-          .select(fields)
-          .cache('customers')
-      : await Customer.where({ deletedAt: null })
-          .find(findObj)
-          .skip((pageNum - 1) * length)
-          .sort(sortBy)
-          .limit(length)
-          .select(fields);
+    const baseQuery = Customer.where({ deletedAt: null }).find(findObj);
+    const total = await Customer.where({ deletedAt: null }).find(findObj).countDocuments();
+    const query = baseQuery
+        .skip((parseInt(pageNum) - 1) * parseInt(length))
+        .sort(sortBy)
+        .limit(parseInt(length))
+        .select(fields);
+    if (isCache) {
+      const data = await query.cache(`customers_${searchBy}_${pageNum}_${fields}_${length}_${sortBy}`);
+      return { data, total };
+    } else {
+      const data = await query;
+      return { data, total };
+    }
   } catch (error) {
     logger.error(error.toString());
   }

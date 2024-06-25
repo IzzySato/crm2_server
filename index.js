@@ -11,7 +11,7 @@ const customerRouter = require('./routes/customer/index.js');
 const { dbConnect } = require('./database/db_config.js');
 const logger = require('./lib/logger.js');
 const passport = require('passport');
-const cookieSession = require('cookie-session');
+const session = require('express-session');
 
 dotenv.config();
 
@@ -19,21 +19,27 @@ const PORT = process.env.PORT || 8080;
 const app = express();
 
 require('./lib/cache.js');
-require('./middlewares/passport.js');
 
-app.use(cookieSession({
-  name: 'session',
-  keys: [process.env.SESSION_SECRET],
-  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // Set secure flag in production
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
+require('./middlewares/passport.js');
+
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization');
   res.header('Access-Control-Allow-Credentials', true);
   next();
 });

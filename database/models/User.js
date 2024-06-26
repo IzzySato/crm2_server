@@ -23,13 +23,6 @@ const UserSchema = new mongoose.Schema({
   permissions: {
     type: [String],
   },
-  active: {
-    type: Boolean,
-  },
-  date: {
-    type: String,
-    default: Date.now(),
-  },
   createdAt: {
     type: String,
     default: Date.now(),

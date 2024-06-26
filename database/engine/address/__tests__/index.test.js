@@ -1,9 +1,9 @@
 'use strict';
 const { describe, expect, test } = require('@jest/globals');
 const { addAddress, getAddressById } = require('..');
-const { setup } = require('../../../test/setup');
+const { setup } = require('../../../testSetUp/setup');
 const Address = require('../../../models/Address');
-const { address, addresses } = require('../../../test/testData/addressData');
+const { address, addresses } = require('../../../testSetUp/testData/addressData');
 
 describe('Test Address Database Functions', () => {
   beforeAll(setup.beforeAll);

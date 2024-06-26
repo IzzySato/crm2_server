@@ -42,7 +42,25 @@ const addUser = async (user) => {
   }
 };
 
+const deleteUser = async (_id) => {
+  try {
+    return await User.deleteOne({ _id })
+  } catch (error) {
+    logger.error(error.toString());
+  }
+};
+
+const getUserById = async (id) => {
+  try {
+    return await User.findById(id);
+  } catch (error) {
+    logger.error(error.toString());
+  }
+};
+
 module.exports = {
   findOrCreate,
   addUser,
+  getUserById,
+  deleteUser,
  };

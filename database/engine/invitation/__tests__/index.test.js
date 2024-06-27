@@ -1,9 +1,9 @@
 'use strict';
 const { describe, expect, test } = require('@jest/globals');
 const { getInvitationByEmail, addInvitation } = require('..');
-const { setup } = require('../../../test/setup');
+const { setup } = require('../../../testSetUp/setup');
 const Invitation = require('../../../models/Invitation');
-const { invitation } = require('../../../test/testData/invitationData');
+const { invitation } = require('../../../testSetUp/testData/invitationData');
 
 describe('Invitation Model', () => {
   beforeAll(setup.beforeAll);

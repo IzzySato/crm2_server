@@ -1,4 +1,5 @@
 'use strict';
+
 module.exports = {
-  cookieKey: process.env.COOKIE_KEY
+  MONGO_URI: process.env.MONGO_URI
 };

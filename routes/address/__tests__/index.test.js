@@ -3,8 +3,8 @@ const { describe, test } = require('@jest/globals');
 const request = require('supertest');
 const dotenv = require('dotenv');
 const Address = require('../../../database/models/Address');
-const { address } = require('../../../database/test/testData/addressData');
-const { setup } = require('../../../database/test/setup');
+const { address } = require('../../../database/testSetUp/testData/addressData');
+const { setup } = require('../../../database/testSetUp/setup');
 
 dotenv.config();
 

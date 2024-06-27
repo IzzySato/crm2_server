@@ -1,6 +1,6 @@
 const { describe, expect, test } = require('@jest/globals');
 const { findOrCreate, addUser } = require('..');
-const { setup } = require('../../../test/setup');
+const { setup } = require('../../../testSetUp/setup');
 const { ObjectId } = require('mongodb');
 
 describe('Test User Database Functions', () => {

@@ -1,9 +1,9 @@
 'use strict';
 const { describe, expect, test } = require('@jest/globals');
 const { addCompany } = require('..');
-const { setup } = require('../../../test/setup');
+const { setup } = require('../../../testSetUp/setup');
 const Company = require('../../../models/Company');
-const { company } = require('../../../test/testData/companyData');
+const { company } = require('../../../testSetUp/testData/companyData');
 
 describe('Test Company Database Functions', () => {
   beforeAll(setup.beforeAll);

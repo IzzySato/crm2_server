@@ -10,6 +10,7 @@ jobs:
       NODE_ENV: ci
       JWT_SECRET: ci_jwt_secret
       SERVER_URL: http://localhost:8080
+      MONGO_TEST_URI: mongodb+srv://izzysato:49Clv7z4rCc1R0Vf@crm.02gf9j0.mongodb.net/test_${JEST_WORKER_ID}?retryWrites=true&w=majority&appName=crm
     steps:
       - checkout
       - node/install-packages:

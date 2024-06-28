@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "jest": {
-    "setupTestFrameworkScriptFile": "./database/test/setup.js"
-  },
   "scripts": {
     "start": "nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --testTimeout=50000"

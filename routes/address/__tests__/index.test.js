@@ -24,10 +24,12 @@ describe('Address routes', () => {
 
   test('GET /address/:id', async () => {
     const { _id } = await Address.create(address);
+    console.log('_id', _id)
     await request(process.env.SERVER_URL).get(`/address/${_id.toString()}`).expect(200);
   });
 
   test('POST /address', async () => {
+    console.log(process.env.SERVER_URL);
     const response = await request(process.env.SERVER_URL).post('/address').send({
       name: 'work',
       line1: '6679 Robson street',
@@ -37,6 +39,7 @@ describe('Address routes', () => {
       postcode: 'V7T I0R',
       active: true
     }).set('Accept', 'application/json').expect(200);
+    console.log(response)
     expect(response.body[0].name).toEqual('work');
     expect(response.body[0].line1).toEqual('6679 Robson street');
   });

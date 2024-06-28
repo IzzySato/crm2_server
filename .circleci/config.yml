@@ -15,6 +15,11 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run:
+          name: Wait for Application to be Ready
+          command: |
+            # Wait until the application is available
+            timeout 60s bash -c 'until curl -s $SERVER_URL; do sleep 1; done'
+      - run:
           command: npm test
           name: Run tests
 

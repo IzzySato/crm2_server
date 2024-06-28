@@ -24,8 +24,6 @@ describe('Address routes', () => {
 
   test('GET /address/:id', async () => {
     const { _id } = await Address.create(address);
-    const addresses = await Address.find();
-    console.log('addresses', addresses)
     await request(process.env.SERVER_URL).get(`/address/${_id.toString()}`).expect(200);
   });
 
@@ -40,6 +38,7 @@ describe('Address routes', () => {
       postcode: 'V7T I0R',
       active: true
     }).set('Accept', 'application/json').expect(200);
+    console.log(response.body)
     expect(response.body[0].name).toEqual('work');
     expect(response.body[0].line1).toEqual('6679 Robson street');
   });

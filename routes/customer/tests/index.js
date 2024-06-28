@@ -4,6 +4,9 @@ const request = require('supertest');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 
+// Once staging is created, change the folder name to __tests__ and file name to index.test.js
+// Not testing in CI
+
 dotenv.config();
 
 describe('Customer routes', () => {

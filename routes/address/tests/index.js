@@ -6,6 +6,10 @@ const Address = require('../../../database/models/Address');
 const { address } = require('../../../database/testSetUp/testData/addressData');
 const { setup } = require('../../../database/testSetUp/setup');
 
+
+// Once staging is created, change the folder name to __tests__ and file name to index.test.js
+// Not testing in CI
+
 dotenv.config();
 
 describe('Address routes', () => {
@@ -28,7 +32,6 @@ describe('Address routes', () => {
   });
 
   test('POST /address', async () => {
-    console.log(process.env.SERVER_URL);
     const response = await request(process.env.SERVER_URL).post('/address').send({
       name: 'work',
       line1: '6679 Robson street',
@@ -38,7 +41,6 @@ describe('Address routes', () => {
       postcode: 'V7T I0R',
       active: true
     }).set('Accept', 'application/json').expect(200);
-    console.log(response.body)
     expect(response.body[0].name).toEqual('work');
     expect(response.body[0].line1).toEqual('6679 Robson street');
   });

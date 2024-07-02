@@ -3,7 +3,7 @@
 const date = new Date();
 const { ObjectId } = require('mongodb');
 
-const customers = [
+const customerSampleData = [
   {
     firstName: 'Alice',
     lastName: 'Smith',
@@ -181,17 +181,6 @@ const customers = [
   },
 ];
 
-const customer = {
-  firstName: 'Alice',
-  lastName: 'Brown',
-  email: 'alice.brown@mail.com',
-  phone: '1235672345',
-  addresses: [new ObjectId('5063114bd386d8fadbd6b004')],
-  tags: [],
-  companyId: new ObjectId('6348acd2e1a47ca32e79f46f')
-};
-
 module.exports = {
-  customers,
-  customer
+  customerSampleData
 };

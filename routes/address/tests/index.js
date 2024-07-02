@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const Address = require('../../../database/models/Address');
 const { address } = require('../../../database/testSetUp/testData/addressData');
 const { setup } = require('../../../database/testSetUp/setup');
-
+const { SERVER_URL } = require('../../../config/keys');
 
 // Once staging is created, change the folder name to __tests__ and file name to index.test.js
 // Not testing in CI
@@ -28,11 +28,11 @@ describe('Address routes', () => {
 
   test('GET /address/:id', async () => {
     const { _id } = await Address.create(address);
-    await request(process.env.SERVER_URL).get(`/address/${_id.toString()}`).expect(200);
+    await request(SERVER_URL).get(`/address/${_id.toString()}`).expect(200);
   });
 
   test('POST /address', async () => {
-    const response = await request(process.env.SERVER_URL).post('/address').send({
+    const response = await request(SERVER_URL).post('/address').send({
       name: 'work',
       line1: '6679 Robson street',
       line2: '',

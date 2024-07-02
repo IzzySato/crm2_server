@@ -1,12 +1,23 @@
 const { describe, expect, test } = require('@jest/globals');
 const { findOrCreate, addUser } = require('..');
 const { setup } = require('../../../testSetUp/setup');
-const { ObjectId } = require('mongodb');
+const { userSampleData } = require('../../../testSetUp/testData/userDara');
+const User = require('../../../models/User');
 
-describe('Test User Database Functions', () => {
-  beforeAll(setup.beforeAll);
-  afterAll(setup.afterAll);
+beforeAll(setup.beforeAll);
+afterAll(setup.afterAll);
+afterEach(() => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await User.deleteMany({});
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
+  })
+});
 
+describe('Add User', () => {
   test('create a new user', async () => {
     const newUser = {
       id: '',
@@ -25,18 +36,9 @@ describe('Test User Database Functions', () => {
   });
 
   test('add a new user', async () => {
-    const user = {
-      firstName: 'Joe',
-      lastName: 'Smith',
-      companyId: new ObjectId('51e0373c6f35bd826f47e9a0'),
-      email: 'joe.smith@gmail.com',
-      authProviderId: 'dwdvduwd778721',
-      permissions: ['read', 'write'],
-      active: true
-    };
-    const result = await addUser(user);
-    expect(result[0].firstName).toBe('Joe');
-    expect(result[0].lastName).toBe('Smith');
-    expect(result[0].email).toBe('joe.smith@gmail.com');
+    const result = await addUser(userSampleData[0]);
+    expect(result[0].firstName).toBe(userSampleData[0].firstName);
+    expect(result[0].lastName).toBe(userSampleData[0].lastName);
+    expect(result[0].email).toBe(userSampleData[0].email);
   });
 });

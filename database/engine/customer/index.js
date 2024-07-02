@@ -3,28 +3,33 @@ const logger = require('../../../lib/logger');
 const Customer = require('../../models/Customer');
 const { convertIdStringToObjectId } = require('../utils/convertObjectId');
 
-const addCustomer = async (customer) => {
+/**
+ * Insert customers
+ * @param {*} customers array of the customers or object of customer
+ * @returns { total: number, data: [Customer] }
+ */
+const addCustomer = async (customers) => {
   try {
-    if (Array.isArray(customer)) {
-      customer = customer.map((c) => {
+    if (Array.isArray(customers)) {
+      customers = customers.map((customer) => {
         return {
-          ...c,
-          addresses: c.addresses.map((address) =>
+          ...customer,
+          addresses: customer.addresses.map((address) =>
             convertIdStringToObjectId(address)
           ),
-          companyId: convertIdStringToObjectId(c.companyId),
+          companyId: convertIdStringToObjectId(customer.companyId),
         };
       });
     } else {
-      customer = {
-        ...customer,
-        addresses: customer.addresses.map((address) =>
+      customers = {
+        ...customers,
+        addresses: customers.addresses.map((address) =>
           convertIdStringToObjectId(address)
         ),
-        companyId: convertIdStringToObjectId(customer.companyId),
+        companyId: convertIdStringToObjectId(customers.companyId),
       };
     }
-    const data = await Customer.insertMany(customer);
+    const data = await Customer.insertMany(customers);
     return {
       total: data.length,
       data,

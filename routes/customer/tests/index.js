@@ -3,6 +3,7 @@ const { describe, test } = require('@jest/globals');
 const request = require('supertest');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
+const { SERVER_URL } = require('../../../config/keys');
 
 // Once staging is created, change the folder name to __tests__ and file name to index.test.js
 // Not testing in CI
@@ -16,14 +17,14 @@ describe('Customer routes', () => {
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
-    await request(process.env.SERVER_URL)
+    await request(SERVER_URL)
       .get('/customer')
       .set('Authorization', `Bearer ${token}`)
       .expect(200);
   });
 
   test('POST /customer', async () => {
-    await request(process.env.SERVER_URL)
+    await request(SERVER_URL)
       .post('/customer')
       .send({
         firstName: 'Alice',

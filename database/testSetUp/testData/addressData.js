@@ -1,17 +1,6 @@
 'use strict';
 
-const address  = {
-  name: 'primary',
-  line1: '11 main street',
-  line2: '',
-  city: 'Burnaby',
-  province: 'BC',
-  postcode: '123455',
-  active: true,
-  default: false,
-};
-
-const addresses = [
+const addressesSampleData = [
   {
     name: 'primary',
     line1: '22223 main street',
@@ -35,6 +24,5 @@ const addresses = [
 ];
 
 module.exports = {
-  address,
-  addresses
+  addressesSampleData
 };

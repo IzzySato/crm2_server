@@ -3,7 +3,7 @@
 const date = new Date();
 const { ObjectId } = require('mongodb');
 
-const jobs = [
+const jobSampleData = [
   {
     jobType: 'Home Improvments',
     note: "",
@@ -46,4 +46,4 @@ const jobs = [
   },
 ];
 
-module.exports = { jobs };
+module.exports = { jobSampleData };

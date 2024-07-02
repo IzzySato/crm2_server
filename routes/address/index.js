@@ -2,16 +2,14 @@
 const express = require('express');
 const { getAddressById, addAddress, updateAddress } = require('../../database/engine/address/index');
 const router = express.Router();
-const cleanCache = require('../../middlewares/cleanCache');
 
 router.get('/:id', async (req, res, next) => {
-  const data = await getAddressById(req.params.id, { isCache: true });
+  const data = await getAddressById(req.params.id, { isCache: false });
   res.json(data);
 });
 
-router.post('/', cleanCache, async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   const data = await addAddress(req.body);
-  console.log(data)
   res.json(data);
 });
 

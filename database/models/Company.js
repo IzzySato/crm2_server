@@ -5,10 +5,6 @@ const CompanySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    logoImg: {
-        data: Buffer,
-        contentType: String,
-    },
     addressIds: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'Address'

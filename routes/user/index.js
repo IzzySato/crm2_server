@@ -10,9 +10,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
-  console.log(req.body)
   const result = await addUser(req.body);
-  console.log(result)
   res.json(result);
 });
 

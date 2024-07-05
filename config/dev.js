@@ -5,5 +5,7 @@ module.exports = {
   REDIS_URL: process.env.REDIS_URL,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-  SERVER_URL: process.env.SERVER_URL
+  SERVER_URL: process.env.SERVER_URL,
+  S3_ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID,
+  S3_SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY,
 };

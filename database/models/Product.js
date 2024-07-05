@@ -14,7 +14,9 @@ const ProductSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true,
+  },
+  imageUrl: {
+    type: String
   },
   companyId: {
     type: mongoose.Schema.Types.ObjectId,

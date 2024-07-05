@@ -10,6 +10,7 @@ const authRouter = require('./routes/auth/index.js');
 const customerRouter = require('./routes/customer/index.js');
 const userRouter = require('./routes/user/index.js');
 const productRouter = require('./routes/product/index.js');
+const uploadRouter = require('./routes/upload/index.js');
 const { dbConnect } = require('./database/db_config.js');
 const logger = require('./lib/logger.js');
 const passport = require('passport');
@@ -65,6 +66,7 @@ app.use('/auth', authRouter);
 app.use('/customer', customerRouter);
 app.use('/user', userRouter);
 app.use('/product', productRouter);
+app.use('/upload', uploadRouter);
 
 app.use((req, res, next) => {
   next(createError(404));

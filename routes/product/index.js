@@ -19,13 +19,14 @@ router.get('/', authenticateJWT, async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   const id = req.params.id;
-  const result = await getProductById(id, { isCache: true });
+  const result = await getProductById(id, { isCache: false });
   res.json(result);
 });
 
 router.post('/', cleanCache, async (req, res, next) => {
   req.cache_key = 'products_';
   const product = req.body;
+  console.log('product', product);
   const result = await addProduct(product);
   res.json(result);
 });

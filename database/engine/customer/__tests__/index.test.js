@@ -79,7 +79,7 @@ describe('Update Customer', () => {
     const addedCustomer = await addCustomer(customerSampleData[0]);
     const id = addedCustomer.data[0]._id.toString();
     const result = await updateCustomer(id, { firstName: 'Ben' });
-    expect(result.modifiedCount).toBe(1);
+    expect(result.firstName).toBe('Ben');
   });
 
   test('soft delete customer', async () => {
@@ -87,6 +87,6 @@ describe('Update Customer', () => {
     const id = addedCustomer.data[0]._id.toString();
     const today = new Date();
     const result = await updateCustomer( id, { deletedAt: today });
-    expect(result.modifiedCount).toBe(1);
+    expect(result.deletedAt).not.toBe(null);
   });
 });

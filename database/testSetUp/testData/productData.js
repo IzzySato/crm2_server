@@ -9,6 +9,7 @@ const productSampleData = [
     categoryTags: [],
     description: '1"X4" Fir Floor T&G VG Clear R/L (6 PER BNDL)',
     companyId: new ObjectId('6348acd2e1a47ca32e79f46f'),
+    imageUrl: ''
   },
   {
     name: '1/4 Acrylic 4x8 Clear EX F2 Optix',
@@ -16,6 +17,7 @@ const productSampleData = [
     categoryTags: [],
     description: '1/4" Acrylic 4x8 Clear EX F2 Optix',
     companyId: new ObjectId('6348acd2e1a47ca32e79f46f'),
+    imageUrl: ''
   },
   {
     name: 'Barrier Warning Orange 4X50',
@@ -23,6 +25,7 @@ const productSampleData = [
     categoryTags: [],
     description: 'Barrier Warning Orange',
     companyId: new ObjectId('6348acd2e1a47ca32e79f46f'),
+    imageUrl: ''
   },
   {
     name: 'Catch Basin Locking Outlet 3"&4" Universal',
@@ -30,6 +33,7 @@ const productSampleData = [
     categoryTags: [],
     description: 'Catch Basin Locking Outlet 3"&4" Universal',
     companyId: new ObjectId('6348acd2e1a47ca32e79f46f'),
+    imageUrl: '',
     deletedAt: date
   },
 ];

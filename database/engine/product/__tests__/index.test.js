@@ -73,7 +73,7 @@ describe('Update Product', () => {
     const addedProduct = await addProduct(productSampleData[0]);
     const id = addedProduct.data[0]._id.toString();
     const result = await updateProduct(id, { name: 'Test' });
-    expect(result.modifiedCount).toBe(1);
+    expect(result.name).toBe('Test');
   });
 
   test('soft delete product', async () => {
@@ -81,6 +81,6 @@ describe('Update Product', () => {
     const id = addedProduct.data[0]._id.toString();
     const today = new Date();
     const result = await updateProduct( id, { deletedAt: today });
-    expect(result.modifiedCount).toBe(1);
+    expect(result.deletedAt).not.toBe(null);
   });
 });

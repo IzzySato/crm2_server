@@ -23,7 +23,7 @@ const getAddressById = async (id, { isCache = false }) => {
 
 const updateAddress = async (_id, updateField) => {
   try {
-    return await Address.updateOne({ _id }, updateField);
+    return await Address.findOneAndUpdate({ _id }, updateField, { returnDocument: 'after'});
   } catch (error) {
     logger.error(error.toString());
   }

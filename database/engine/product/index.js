@@ -1,5 +1,6 @@
 'use strict';
 const logger = require('../../../lib/logger');
+const { deleteImage } = require('../../../lib/s3');
 const Product = require('../../models/Product');
 const { convertIdStringToObjectId } = require('../utils/convertObjectId');
 
@@ -88,7 +89,16 @@ const getProducts = async (
 
 const updateProduct = async (_id, updateField) => {
   try {
-    return await Product.updateOne({ _id }, updateField);
+    if (updateField.deletedAt) {
+      const product = await Product.findById(_id);
+      if (product.imageUrl !== '') {
+        deleteImage(product.imageUrl);
+      }
+      updateField.imageUrl = ''
+    }
+    return await Product.findOneAndUpdate({ _id }, updateField, {
+      returnDocument: 'after',
+    });
   } catch (error) {
     logger.error(error.toString());
   }

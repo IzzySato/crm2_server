@@ -45,7 +45,7 @@ const addJob = async (job) => {
  */
 const updateJob = async (_id, updateField) => {
   try {
-    return await Job.updateOne({ _id }, updateField);
+    return await Job.findOneAndUpdate({ _id }, updateField, { returnDocument: 'after'});
   } catch (error) {
     logger.error(error.toString());
   }

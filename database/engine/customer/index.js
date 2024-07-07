@@ -41,7 +41,7 @@ const addCustomer = async (customers) => {
 
 const updateCustomer = async (_id, updateField) => {
   try {
-    return await Customer.updateOne({ _id }, updateField);
+    return await Customer.findOneAndUpdate({ _id }, updateField, { returnDocument: 'after'});
   } catch (error) {
     logger.error(error.toString());
   }

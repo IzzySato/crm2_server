@@ -23,13 +23,12 @@ const setup = {
     return new Promise(async (resolve, reject) => {
       let err = undefined;
       try {
-        await mongoose.connection.dropDatabase();
+        await mongoose.connection.close();
+        resolve();
       } catch (error) {
         err = error;
         logger.error(error.toString());
-      } finally {
-        await mongoose.connection.close();
-        (err) ? reject(err) : resolve();
+        reject(error);
       }
     });
   },

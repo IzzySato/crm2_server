@@ -21,6 +21,7 @@
     "express-session": "^1.18.0",
     "google-auth-library": "^9.9.0",
     "http-errors": "^2.0.0",
+    "ioredis": "^5.4.1",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.5.0",
     "mongoose": "^8.3.1",

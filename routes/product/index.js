@@ -26,7 +26,6 @@ router.get('/:id', async (req, res, next) => {
 router.post('/', cleanCache, async (req, res, next) => {
   req.cache_key = 'products_';
   const product = req.body;
-  console.log('product', product);
   const result = await addProduct(product);
   res.json(result);
 });

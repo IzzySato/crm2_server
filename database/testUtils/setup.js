@@ -21,12 +21,10 @@ const setup = {
   },
   afterAll: () => {
     return new Promise(async (resolve, reject) => {
-      let err = undefined;
       try {
-        await mongoose.connection.close();
+        await mongoose.disconnect();
         resolve();
       } catch (error) {
-        err = error;
         logger.error(error.toString());
         reject(error);
       }

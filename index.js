@@ -11,7 +11,8 @@ const customerRouter = require('./routes/customer/index.js');
 const userRouter = require('./routes/user/index.js');
 const productRouter = require('./routes/product/index.js');
 const uploadRouter = require('./routes/upload/index.js');
-const { dbConnect } = require('./database/db_config.js');
+const jwtRouter = require('./routes/jwt/index.js');
+const { dbConnect } = require('./database/dbConfig.js');
 const logger = require('./lib/logger.js');
 const passport = require('passport');
 const session = require('express-session');
@@ -67,6 +68,7 @@ app.use('/customer', customerRouter);
 app.use('/user', userRouter);
 app.use('/product', productRouter);
 app.use('/upload', uploadRouter);
+app.use('/jwt', jwtRouter);
 
 app.use((req, res, next) => {
   next(createError(404));

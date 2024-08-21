@@ -3,8 +3,8 @@ const { describe, test } = require('@jest/globals');
 const request = require('supertest');
 const dotenv = require('dotenv');
 const Address = require('../../../database/models/Address');
-const { address } = require('../../../database/testSetUp/testData/addressData');
-const { setup } = require('../../../database/testSetUp/setup');
+const { address } = require('../../../database/testUtils/testData/addressData');
+const { setup } = require('../../../database/testUtils/setup');
 const { SERVER_URL } = require('../../../config/keys');
 
 // Once staging is created, change the folder name to __tests__ and file name to index.test.js

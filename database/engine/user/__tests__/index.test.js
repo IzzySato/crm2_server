@@ -1,7 +1,7 @@
 const { describe, expect, test } = require('@jest/globals');
 const { findOrCreate, addUser } = require('..');
-const { setup } = require('../../../testSetUp/setup');
-const { userSampleData } = require('../../../testSetUp/testData/userDara');
+const { setup } = require('../../../testUtils/setup');
+const { userSampleData } = require('../../../testUtils/testData/userDara');
 const User = require('../../../models/User');
 
 beforeAll(setup.beforeAll);

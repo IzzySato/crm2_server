@@ -1,9 +1,9 @@
 'use strict';
 const { describe, expect, test } = require('@jest/globals');
 const { getInvitationByEmail, addInvitation } = require('..');
-const { setup } = require('../../../testSetUp/setup');
+const { setup } = require('../../../testUtils/setup');
 const Invitation = require('../../../models/Invitation');
-const { invitationSampleData } = require('../../../testSetUp/testData/invitationData');
+const { invitationSampleData } = require('../../../testUtils/testData/invitationData');
 
 beforeAll(setup.beforeAll);
 afterAll(setup.afterAll);

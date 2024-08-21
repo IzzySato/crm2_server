@@ -1,9 +1,9 @@
 'use strict';
 const { describe, expect, test } = require('@jest/globals');
 const { addCompany } = require('..');
-const { setup } = require('../../../testSetUp/setup');
+const { setup } = require('../../../testUtils/setup');
 const Company = require('../../../models/Company');
-const { companySampleData } = require('../../../testSetUp/testData/companyData');
+const { companySampleData } = require('../../../testUtils/testData/companyData');
 
 beforeAll(setup.beforeAll);
 afterAll(setup.afterAll);

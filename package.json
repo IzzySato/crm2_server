@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1653.0",
+    "body-parser": "^1.20.2",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.1.0",

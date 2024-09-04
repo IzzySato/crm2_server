@@ -7,15 +7,8 @@ const { addressesSampleData } = require('../../../testUtils/testData/addressData
 
 beforeAll(setup.beforeAll);
 afterAll(setup.afterAll);
-afterEach(() => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      await Address.deleteMany({});
-      resolve();
-    } catch (error) {
-      reject(error);
-    }
-  })
+afterEach(async () => {
+  await Address.deleteMany({});
 });
 
 describe('Get address', () => {
@@ -27,15 +20,15 @@ describe('Get address', () => {
 });
 
 describe('Add addresses', () => {
-  // passing Address object
   test('add a new address', async () => {
-    const result = await addAddress(addressesSampleData[0]);
+    const addressObject = addressesSampleData[0];
+    const result = await addAddress(addressObject);
     expect(result[0].line1).toBe(addressesSampleData[0].line1);
   });
 
   test('add new addresses', async () => {
-    // passing array of Address
-    const result = await addAddress(addressesSampleData);
+    const addressArray = addressesSampleData;
+    const result = await addAddress(addressArray);
     expect(result.length).toBe(2);
   });
 });

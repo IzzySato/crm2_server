@@ -4,8 +4,8 @@ const Job = require('../../models/Job');
 const { convertIdStringToObjectId } = require('../utils/convertObjectId');
 
 /**
- * add a new job
- * @param {*} job Object or array
+ * add a new job | add new jobs
+ * @param {*} job Object or Array
  * @returns { total: number, data: Job[] }
  */
 const addJob = async (job) => {
@@ -14,17 +14,17 @@ const addJob = async (job) => {
       job = job.map((j) => {
         return {
           ...j,
-          customerId: convertIdStringToObjectId(j.customerId),
-          companyId: convertIdStringToObjectId(j.companyId),
-          products: job.map((j) => convertIdStringToObjectId(j)),
+          customerId: j.customerId ? convertIdStringToObjectId(j.customerId) : null,
+          companyId: j.companyId ? convertIdStringToObjectId(j.companyId) : null,
+          products: j.products.length > 0 ? j.products.map((j) => convertIdStringToObjectId(j)) : [],
         };
       });
     } else {
       job = {
         ...job,
-        customerId: convertIdStringToObjectId(j.customerId),
-        companyId: convertIdStringToObjectId(j.companyId),
-        products: job.map((j) => convertIdStringToObjectId(j)),
+        customerId: job.customerId ? convertIdStringToObjectId(job.customerId) : null,
+        companyId: job.companyId ? convertIdStringToObjectId(job.companyId) : null,
+        products: job.products.length > 0 ? job.products.map((j) => convertIdStringToObjectId(j)) : [],
       };
     }
     const data = await Job.insertMany(job);
@@ -34,6 +34,7 @@ const addJob = async (job) => {
     };
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 
@@ -48,6 +49,7 @@ const updateJob = async (_id, updateField) => {
     return await Job.findOneAndUpdate({ _id }, updateField, { returnDocument: 'after'});
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 
@@ -101,20 +103,21 @@ const getJobs = async (
     }
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 
 /**
- * Get a Job by id obj
- * @param {*} obj e.g. { _id: id } or { customerId: id }
- * @param {*} param1 { isCache = false }
- * @returns
+ * Get a Job by job id
+ * @param {*} id job id
+ * @returns Job object
  */
-const getJobById = async (obj, { isCache = false }) => {
+const getJobById = async (_id) => {
   try {
-    return isCache ? await Job.findOne(obj).cache(id) : await Job.findOne(obj);
+    return await Job.findOne({ _id });
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 

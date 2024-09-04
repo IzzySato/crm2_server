@@ -34,7 +34,7 @@ This repository contains the backend code for the Customer Relationship Manageme
 ```
 
 3. Set up environment variables
-MONGO_URI=mongo_url
+MONGO_URI=mongo_uri
 IOREDIS_URL=redis_url
 CLIENT_URL=http://localhost:3000
 SERVER_URL=http://localhost:8080

@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const logger = require('../../lib/logger');
 const dotenv = require('dotenv');
 
-dotenv.config();
+dotenv.config({ path: '.env.test' });
 
 (async () => {
   try {
-    const MONGO_TEST_URI = process.env.MONGO_TEST_URI;
-    await mongoose.connect(MONGO_TEST_URI);
+    const MONGO_URI = process.env.MONGODB_URI;
+    await mongoose.connect(MONGO_URI);
     await mongoose.connection.dropDatabase();
     logger.info('Database dropped successfully.');
   } catch (error) {

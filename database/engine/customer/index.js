@@ -36,6 +36,7 @@ const addCustomer = async (customers) => {
     };
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 
@@ -44,6 +45,7 @@ const updateCustomer = async (_id, updateField) => {
     return await Customer.findOneAndUpdate({ _id }, updateField, { returnDocument: 'after'});
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 
@@ -85,6 +87,7 @@ const getCustomers = async (
     }
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 
@@ -95,6 +98,7 @@ const getCustomerById = async (id, { isCache = false }) => {
       : await Customer.findOne({ _id: id });
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 

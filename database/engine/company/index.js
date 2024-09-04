@@ -8,6 +8,7 @@ const addCompany = async (company) => {
     return await Company.insertMany(company);
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 

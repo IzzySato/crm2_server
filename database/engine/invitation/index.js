@@ -7,6 +7,7 @@ const getInvitationByEmail = async (email) => {
     return await Invitation.findOne({ email });
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 
@@ -16,6 +17,7 @@ const addInvitation = async (invitation) => {
     return await Invitation.insertMany(invitation);
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 

@@ -16,18 +16,18 @@ const ProductSchema = new mongoose.Schema({
     type: String,
   },
   imageUrl: {
-    type: String
+    type: String,
   },
   companyId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Company',
   },
   createdAt: {
-    type: String,
-    default: Date.now(),
+    type: Date,
+    default: Date.now,
   },
   deletedAt: {
-    type: String,
+    type: Date,
     default: null,
   },
   productType: mongoose.Schema.Types.Mixed,

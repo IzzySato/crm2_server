@@ -8,6 +8,7 @@ const addAddress = async (address) => {
     return await Address.insertMany(address);
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 
@@ -18,6 +19,7 @@ const getAddressById = async (id, { isCache = false }) => {
       : await Address.findOne({ _id: id });
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 
@@ -26,6 +28,7 @@ const updateAddress = async (_id, updateField) => {
     return await Address.findOneAndUpdate({ _id }, updateField, { returnDocument: 'after'});
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 

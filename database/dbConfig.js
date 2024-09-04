@@ -1,11 +1,10 @@
 'use strict';
 const mongoose = require('mongoose');
 const logger = require('../lib/logger');
-const { MONGO_URI } = require('../config/keys');
 
 const dbConnect = () => {
   try {
-    mongoose.connect(MONGO_URI);
+    mongoose.connect(process.env.MONGODB_URI);
     const db = mongoose.connection;
     db.on('error', (error) => logger.error(error));
     db.once('open', () => logger.info('Connect to Database'));

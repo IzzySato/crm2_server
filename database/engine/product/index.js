@@ -14,12 +14,16 @@ const addProduct = async (products) => {
     if (Array.isArray(products)) {
       products = products.map((product) => ({
         ...product,
-        companyId: convertIdStringToObjectId('5063114bd386d8fadbd6b004'),
+        companyId: product.companyId
+          ? convertIdStringToObjectId(product.companyId)
+          : null,
       }));
     } else {
       products = {
         ...products,
-        companyId: convertIdStringToObjectId('5063114bd386d8fadbd6b004'),
+        companyId: products.companyId
+          ? convertIdStringToObjectId(products.companyId)
+          : null,
       };
     }
     const data = await Product.insertMany(products);
@@ -29,6 +33,7 @@ const addProduct = async (products) => {
     };
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 
@@ -39,6 +44,7 @@ const getProductById = async (id, { isCache = false }) => {
       : await Product.findOne({ _id: id });
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 
@@ -84,6 +90,7 @@ const getProducts = async (
     }
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 
@@ -94,13 +101,14 @@ const updateProduct = async (_id, updateField) => {
       if (product.imageUrl !== '') {
         deleteImage(product.imageUrl);
       }
-      updateField.imageUrl = ''
+      updateField.imageUrl = '';
     }
     return await Product.findOneAndUpdate({ _id }, updateField, {
       returnDocument: 'after',
     });
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 

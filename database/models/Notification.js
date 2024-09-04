@@ -19,11 +19,11 @@ const NotificationSchema = new mongoose.Schema({
     ref: 'Company',
   },
   createdAt: {
-    type: String,
-    default: Date.now(),
+    type: Date,
+    default: Date.now,
   },
   deletedAt: {
-    type: String,
+    type: Date,
     default: null,
   },
 });

@@ -7,20 +7,14 @@ const { invitationSampleData } = require('../../../testUtils/testData/invitation
 
 beforeAll(setup.beforeAll);
 afterAll(setup.afterAll);
-afterEach(() => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      await Invitation.deleteMany({});
-      resolve();
-    } catch (error) {
-      reject(error);
-    }
-  })
+afterEach(async () => {
+  await Invitation.deleteMany({});
 });
 
 describe('Get Invitation', () => {
   test('get invitation by email', async () => {
-    await Invitation.create(invitationSampleData);
+    const invitationArray = invitationSampleData;
+    await Invitation.create(invitationArray);
     const result = await getInvitationByEmail('test@mail.com');
     expect(result.permissions[0]).toBe('read');
     expect(result.permissions[1]).toBe('write');
@@ -29,7 +23,8 @@ describe('Get Invitation', () => {
 
 describe('Add Invitation', () => {
   test('add an invitation', async () => {
-    const result = await addInvitation(invitationSampleData);
+    const invitationArray = invitationSampleData;
+    const result = await addInvitation(invitationArray);
     expect(result[0].permissions[0]).toBe('read');
     expect(result[0].permissions[1]).toBe('write');
   });

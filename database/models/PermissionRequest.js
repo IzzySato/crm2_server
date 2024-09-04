@@ -20,11 +20,11 @@ const PermissionRequestSchema = new mongoose.Schema({
     type: String,
   },
   createdAt: {
-    type: String,
-    default: Date.now(),
+    type: Date,
+    default: Date.now,
   },
   deletedAt: {
-    type: String,
+    type: Date,
     default: null,
   },
 });

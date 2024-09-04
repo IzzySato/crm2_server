@@ -30,6 +30,7 @@ const findOrCreate = async ({
     }
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 
@@ -39,6 +40,7 @@ const addUser = async (user) => {
     return await User.insertMany(user);
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 
@@ -47,6 +49,7 @@ const deleteUser = async (_id) => {
     return await User.deleteOne({ _id })
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 
@@ -55,6 +58,7 @@ const getUserById = async (id) => {
     return await User.findById(id);
   } catch (error) {
     logger.error(error.toString());
+    throw error;
   }
 };
 

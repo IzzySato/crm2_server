@@ -7,7 +7,7 @@ const { invitationSampleData } = require('../../../testUtils/testData/invitation
 
 beforeAll(setup.beforeAll);
 afterAll(setup.afterAll);
-afterEach(async () => {
+beforeEach(async () => {
   await Invitation.deleteMany({});
 });
 

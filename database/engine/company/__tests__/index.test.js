@@ -7,7 +7,7 @@ const { companySampleData } = require('../../../testUtils/testData/companyData')
 
 beforeAll(setup.beforeAll);
 afterAll(setup.afterAll);
-afterEach(async () => {
+beforeEach(async () => {
   await Company.deleteMany({});
 });
 

@@ -6,32 +6,57 @@ const {
   updateAddress,
 } = require('../../database/engine/address/index');
 const { authenticateJWT } = require('../../middlewares/auth');
+const addressResultSchema = require('../../schemas/addressResultSchema');
+const { validateInputs } = require('../../validation');
 const router = express.Router();
 
 router.get('/:id', authenticateJWT, async (req, res, next) => {
-  const data = await getAddressById(req.params.id, { isCache: false });
-  if (!data) {
-    return res
-      .status(404)
-      .json({ message: `Address ${req.params.id} not found` });
+  try {
+    const id = req.params.id;
+    const result = await getAddressById(id);
+    if (!result) {
+      const error = new Error(`Address with ID ${id} not found`);
+      error.status = 404;
+      throw error;
+    }
+    res.json(addressResultSchema(result));
+  } catch (error) {
+    next(error);
   }
-  res.json(data);
 });
 
 router.post('/', authenticateJWT, async (req, res, next) => {
-  const data = await addAddress(req.body);
-  res.json(data);
+  try {
+    const requiredFiels = [
+      { name: 'line1', type: 'string' },
+      { name: 'city', type: 'string' },
+      { name: 'province', type: 'string' },
+    ];
+    validateInputs({ requiredFiels, bodyData: req.body, modelName: 'Address' });
+    const data = await addAddress(req.body);
+    res.json({
+      total: data.length,
+      data: data.map(addressResultSchema)
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.put('/:id', authenticateJWT, async (req, res) => {
-  const updateObj = req.body;
-  const result = await updateAddress(req.params.id, updateObj);
-  if (!result) {
-    return res
-      .status(404)
-      .json({ message: `Address ${req.params.id} not found` });
+  try {
+    const id = req.params.id;
+    const updateObj = req.body;
+    const result = await updateAddress(id, updateObj);
+    if (!result) {
+      const error = new Error(`Address with ID ${id} not found`);
+      error.status = 404;
+      throw error;
+    }
+    res.json(addressResultSchema(result));
+  } catch (error) {
+    next(error);
   }
-  res.json(result);
 });
 
 module.exports = router;

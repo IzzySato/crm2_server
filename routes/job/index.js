@@ -7,42 +7,77 @@ const {
   addJob,
   updateJob,
 } = require('../../database/engine/jobs');
+const jobResultSchema = require('../../schemas/jobResultSchema');
+const { validateInputs } = require('../../validation');
 const router = express.Router();
 
-router.get('/', authenticateJWT, async (req, res) => {
-  const query = req.query;
-  const { data, total } = await getJobs(query, { isCache: true });
-  res.json({
-    total,
-    length: query.length || 10,
-    pageNum: query.pageNum || 1,
-    sortBy: query.sortBy || '_id',
-    data,
-  });
+router.get('/', authenticateJWT, async (req, res, next) => {
+  try {
+    const query = req.query;
+    const { data, total } = await getJobs(query, { isCache: true });
+    res.json({
+      total,
+      length: query.length || 10,
+      pageNum: query.pageNum || 1,
+      sortBy: query.sortBy || '_id',
+      data: data.map(jobResultSchema),
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.get('/:id', authenticateJWT, async (req, res) => {
-  const id = req.params.id;
-  const result = await getJobById(id);
-  if (!result) {
-    return res.status(404).json({ message: `Job ${req.params.id} not found` });
+  try {
+    const id = req.params.id;
+    const result = await getJobById(id);
+    if (!result) {
+      const error = new Error(`Job with ID ${id} not found`);
+      error.status = 404;
+      throw error;
+    }
+    res.json(jobResultSchema(result));
+  } catch (error) {
+    next(error);
   }
-  res.json(result);
 });
 
 router.post('/', authenticateJWT, async (req, res) => {
-  const job = req.body;
-  const result = await addJob(job);
-  res.json(result);
+  try {
+    const job = req.body;
+    const requiredFiels = [
+      { name: 'jobType', type: 'string' },
+      { name: 'state', type: 'string' },
+    ];
+    validateInputs({
+      requiredFiels,
+      bodyData: job,
+      modelName: 'Job',
+    });
+    const data = await addJob(job);
+    res.json({
+      total: data.total,
+      data: data.map(jobResultSchema)
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.put('/:id', authenticateJWT, async (req, res) => {
-  const updateObj = req.body;
-  const result = await updateJob(req.params.id, updateObj);
-  if (!result) {
-    return res.status(404).json({ message: `Job ${req.params.id} not found` });
+  try {
+    const id = req.params.id;
+    const updateObj = req.body;
+    const result = await updateJob(id, updateObj);
+    if (!result) {
+      const error = new Error(`Job with ID ${id} not found`);
+      error.status = 404;
+      throw error;
+    }
+    res.json(jobResultSchema(result));
+  } catch (error) {
+    next(error);
   }
-  res.json(result);
 });
 
 module.exports = router;

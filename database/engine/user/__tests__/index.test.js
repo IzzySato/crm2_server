@@ -6,15 +6,8 @@ const User = require('../../../models/User');
 
 beforeAll(setup.beforeAll);
 afterAll(setup.afterAll);
-afterEach(() => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      await User.deleteMany({});
-      resolve();
-    } catch (error) {
-      reject(error);
-    }
-  })
+beforeEach(async () => {
+  await User.deleteMany({});
 });
 
 describe('Add User', () => {

@@ -29,11 +29,7 @@ const addCustomer = async (customers) => {
         companyId: convertIdStringToObjectId(customers.companyId),
       };
     }
-    const data = await Customer.insertMany(customers);
-    return {
-      total: data.length,
-      data,
-    };
+    return await Customer.insertMany(customers);
   } catch (error) {
     logger.error(error.toString());
     throw error;
@@ -91,11 +87,9 @@ const getCustomers = async (
   }
 };
 
-const getCustomerById = async (id, { isCache = false }) => {
+const getCustomerById = async (_id) => {
   try {
-    return isCache
-      ? await Customer.findOne({ _id: id }).cache(id)
-      : await Customer.findOne({ _id: id });
+    return await Customer.findOne({ _id });
   } catch (error) {
     logger.error(error.toString());
     throw error;

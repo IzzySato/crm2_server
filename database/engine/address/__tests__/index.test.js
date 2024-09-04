@@ -7,14 +7,14 @@ const { addressesSampleData } = require('../../../testUtils/testData/addressData
 
 beforeAll(setup.beforeAll);
 afterAll(setup.afterAll);
-afterEach(async () => {
+beforeEach(async () => {
   await Address.deleteMany({});
 });
 
 describe('Get address', () => {
   test('get an address by id', async () => {
     const address = await addAddress(addressesSampleData);
-    const result = await getAddressById(address[0]._id, { isCache: false });
+    const result = await getAddressById(address[0]._id);
     expect(result.line1).toBe(addressesSampleData[0].line1);
   });
 });

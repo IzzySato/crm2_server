@@ -34,17 +34,17 @@ This repository contains the backend code for the Customer Relationship Manageme
 ```
 
 3. Set up environment variables
-MONGO_URI=mongo_uri
-IOREDIS_URL=redis_url
+MONGODB_URI=your_mongo_uri
+IOREDIS_URL=your_redis_url
 CLIENT_URL=http://localhost:3000
 SERVER_URL=http://localhost:8080
-GOOGLE_CLIENT_ID=google_client_id
-GOOGLE_CLIENT_SECRET=google_secret
-GOOGLE_API_KEY=google_api_key
-SESSION_SECRET=session
-JWT_SECRET=jwt
-S3_ACCESS_KEY_ID=s3_access_id
-S3_SECRET_ACCESS_KEY=s3_secret_access_key
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_secret
+GOOGLE_API_KEY=your_google_api_key
+SESSION_SECRET=your_session
+JWT_SECRET=your_jwt_key
+S3_ACCESS_KEY_ID=your_s3_access_id
+S3_SECRET_ACCESS_KEY=your_s3_secret_access_key
 
 4.  Run the server
 ```bash

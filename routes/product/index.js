@@ -8,6 +8,8 @@ const {
   updateProduct,
 } = require('../../database/engine/product');
 const cleanCache = require('../../middlewares/cleanCache');
+const productResultSchema = require('../../schemas/productResultSchema');
+const { validateInputs } = require('../../validation');
 const router = express.Router();
 
 router.get('/', authenticateJWT, async (req, res, next) => {
@@ -19,7 +21,7 @@ router.get('/', authenticateJWT, async (req, res, next) => {
       length: query.length || 10,
       pageNum: query.pageNum || 1,
       sortBy: query.sortBy || '_id',
-      data,
+      data: data.map(productResultSchema),
     });
   } catch (error) {
     next(error);
@@ -27,31 +29,58 @@ router.get('/', authenticateJWT, async (req, res, next) => {
 });
 
 router.get('/:id', authenticateJWT, async (req, res, next) => {
-  const id = req.params.id;
-  const result = await getProductById(id, { isCache: false });
-  if (!result) {
-    return res.status(404).json({ message: `Product ${id} not found` });
+  try {
+    const id = req.params.id;
+    const result = await getProductById(id, { isCache: false });
+    if (!result) {
+      const error = new Error(`Product with ID ${id} not found`);
+      error.status = 404;
+      throw error;
+    }
+    res.json(productResultSchema(result));
+  } catch (error) {
+    next(error);
   }
-  res.json(result);
 });
 
 router.post('/', authenticateJWT, cleanCache, async (req, res, next) => {
-  req.cache_key = 'products_';
-  const product = req.body;
-  const result = await addProduct(product);
-  res.json(result);
+  try {
+    const product = req.body;
+    const requiredFiels = [
+      { name: 'name', type: 'string' },
+      { name: 'sku', type: 'string' },
+    ];
+    validateInputs({
+      requiredFiels,
+      bodyData: product,
+      modelName: 'Product',
+    });
+    req.cache_key = 'products_';
+    const data = await addProduct(product);
+    res.json({
+      total: data.length,
+      data: data.map(productResultSchema)
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.put('/:id', authenticateJWT, cleanCache, async (req, res, next) => {
-  req.cache_key = 'products_';
-  const updateObj = req.body;
-  const result = await updateProduct(req.params.id, updateObj);
-  if (!result) {
-    return res
-      .status(404)
-      .json({ message: `Product ${req.params.id} not found` });
+  try {
+    req.cache_key = 'products_';
+    const id = req.params.id;
+    const updateObj = req.body;
+    const result = await updateProduct(id, updateObj);
+    if (!result) {
+      const error = new Error(`Product with ID ${id} not found`);
+      error.status = 404;
+      throw error;
+    }
+    res.json(productResultSchema(result));
+  } catch (error) {
+    next(error);
   }
-  res.json(result);
 });
 
 module.exports = router;

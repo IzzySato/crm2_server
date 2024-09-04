@@ -27,11 +27,7 @@ const addJob = async (job) => {
         products: job.products.length > 0 ? job.products.map((j) => convertIdStringToObjectId(j)) : [],
       };
     }
-    const data = await Job.insertMany(job);
-    return {
-      total: data.length,
-      data,
-    };
+    return await Job.insertMany(job);
   } catch (error) {
     logger.error(error.toString());
     throw error;

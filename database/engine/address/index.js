@@ -12,11 +12,9 @@ const addAddress = async (address) => {
   }
 };
 
-const getAddressById = async (id, { isCache = false }) => {
+const getAddressById = async (_id) => {
   try {
-    return isCache
-      ? await Address.findOne({ _id: id }).cache(id)
-      : await Address.findOne({ _id: id });
+    return await Address.findOne({ _id });
   } catch (error) {
     logger.error(error.toString());
     throw error;

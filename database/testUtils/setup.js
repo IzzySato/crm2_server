@@ -1,19 +1,18 @@
 'use strict';
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
 const logger = require('../../lib/logger');
 const User = require('../models/User');
 const { userSampleData } = require('./testData/userDara');
 const { generateJwtToken } = require('../../lib/jwt');
+const loadEnv = require('../../config/env');
 
-dotenv.config({ path: '.env.test' });
+loadEnv();
 
 const setup = {
   beforeAll: () => {
     return new Promise(async (resolve, reject) => {
       try {
-        const MONGO_URI = process.env.MONGODB_URI;
-        await mongoose.connect(MONGO_URI);
+        await mongoose.connect(process.env.MONGODB_URI);
         logger.info('connected');
         resolve();
       } catch (error) {

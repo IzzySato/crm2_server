@@ -16,7 +16,7 @@ beforeAll(() => {
   setup.beforeAllNoCache();
 });
 afterAll(setup.afterAll);
-afterEach(async () => {
+beforeEach(async () => {
   await Job.deleteMany({});
   await User.deleteMany({});
 });
@@ -37,7 +37,7 @@ describe('GET Job routes', () => {
       .get(`/job/${job._id.toString()}`)
       .set('authorization', `Bearer ${token}`)
       .expect(200);
-    expect(response.body).toHaveProperty('_id', job._id.toString());
+    expect(response.body).toHaveProperty('id', job._id.toString());
     expect(response.body).toHaveProperty('jobType', job.jobType);
   });
 });

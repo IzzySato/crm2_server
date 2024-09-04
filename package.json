@@ -9,7 +9,7 @@
   "scripts": {
     "start": "nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --testTimeout=50000",
-    "posttest": "node ./database/testUtils/posttest.js"
+    "posttest": "NODE_ENV=test node ./database/testUtils/posttest.js"
   },
   "keywords": [],
   "author": "",

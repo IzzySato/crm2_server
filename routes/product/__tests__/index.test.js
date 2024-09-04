@@ -13,7 +13,7 @@ beforeAll(() => {
   setup.beforeAllNoCache();
 });
 afterAll(setup.afterAll);
-afterEach(async () => {
+beforeEach(async () => {
   await Product.deleteMany({});
   await User.deleteMany({});
 });
@@ -32,7 +32,7 @@ describe('GET Product routes', () => {
     const product = await Product.create(productObject);
     const token = await addUserGetToken();
     await request(app)
-      .get(`/customer/${product._id.toString()}`)
+      .get(`/product/${product._id.toString()}`)
       .set('authorization', `Bearer ${token}`)
       .expect(200);
   });

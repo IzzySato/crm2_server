@@ -1,6 +1,5 @@
 'use strict';
 const express = require('express');
-const dotenv = require('dotenv');
 const createError = require('http-errors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -16,14 +15,9 @@ const jobRouter = require('./routes/job/index.js');
 const { dbConnect } = require('./database/dbConfig.js');
 const passport = require('passport');
 const session = require('express-session');
+const loadEnv = require('./config/env.js');
 
-if (process.env.NODE_ENV !== 'production') {
-  dotenv.config({
-    path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
-  });
-} else {
-  dotenv.config();
-}
+loadEnv();
 
 const app = express();
 
@@ -89,6 +83,15 @@ app.use('/jwt', jwtRouter);
 
 app.use((req, res, next) => {
   next(createError(404));
+});
+
+app.use((err, req, res, next) => {
+  const statusCode = err.status || 500;
+  res.status(statusCode).json({
+    status: statusCode,
+    message: err.message || 'Internal Server Error',
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+  });
 });
 
 module.exports = app;

@@ -11,8 +11,12 @@ router.put(
   authenticateJWT,
   upload.single('file'),
   async (req, res, next) => {
-    const data = await uploadImage(req.user.id, req.file);
-    res.json(data);
+    try {
+      const data = await uploadImage(req.user.id, req.file);
+      res.json(data);
+    } catch (error) {
+      next(error);
+    }
   }
 );
 

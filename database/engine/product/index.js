@@ -26,11 +26,7 @@ const addProduct = async (products) => {
           : null,
       };
     }
-    const data = await Product.insertMany(products);
-    return {
-      total: data.length,
-      data,
-    };
+    return await Product.insertMany(products);
   } catch (error) {
     logger.error(error.toString());
     throw error;

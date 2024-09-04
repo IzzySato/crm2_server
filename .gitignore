@@ -21,6 +21,7 @@ yarn-error.log*
 .env*.local
 .env
 .env.test
+.env.ci
 
 # vercel
 .vercel

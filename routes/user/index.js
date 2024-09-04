@@ -2,22 +2,59 @@
 const express = require('express');
 const { addUser, deleteUser } = require('../../database/engine/user');
 const { authenticateJWT } = require('../../middlewares/auth');
+const userResultSchema = require('../../schemas/userResultSchema');
 const router = express.Router();
 
 router.get('/:id', authenticateJWT, async (req, res, next) => {
-  const id = req.params.id;
-  const result = await getCustomerById(id, { isCache: true });
-  res.json(result);
+  try {
+    const id = req.params.id;
+    const result = await getCustomerById(id, { isCache: true });
+    if (!result) {
+      const error = new Error(`User with ID ${id} not found`);
+      error.status = 404;
+      throw error;
+    }
+    res.json(userResultSchema(result));
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.post('/', authenticateJWT, async (req, res, next) => {
-  const result = await addUser(req.body);
-  res.json(result);
+  try {
+    const requiredFiels = [
+      { name: 'firstName', type: 'string' },
+      { name: 'lastName', type: 'string' },
+      { name: 'email', type: 'string' },
+    ];
+    validateInputs({
+      requiredFiels,
+      bodyData: req.body,
+      modelName: 'User',
+    });
+    const data = await addUser(req.body);
+    res.json({
+      total: data.length,
+      data: data.map(userResultSchema)
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.delete('/', authenticateJWT, async (req, res, next) => {
-  const result = await deleteUser(req.params.id);
-  res.json(result);
+router.delete('/:id', authenticateJWT, async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const result = await deleteUser(id);
+    if (!result) {
+      const error = new Error(`User with ID ${id} not found`);
+      error.status = 404;
+      throw error;
+    }
+    res.json(userResultSchema(result));
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;

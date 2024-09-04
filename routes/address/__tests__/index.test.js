@@ -13,7 +13,7 @@ beforeAll(() => {
   setup.beforeAllNoCache();
 });
 afterAll(setup.afterAll);
-afterEach(async () => {
+beforeEach(async () => {
   await User.deleteMany({});
   await Address.deleteMany({});
 });
@@ -27,7 +27,7 @@ describe('GET Address routes', () => {
       .get(`/address/${address._id.toString()}`)
       .set('authorization', `Bearer ${token}`)
       .expect(200);
-    expect(response.body).toHaveProperty('_id', address._id.toString());
+    expect(response.body).toHaveProperty('id', address._id.toString());
     expect(response.body).toHaveProperty('line1', address.line1);
   });
 });
@@ -42,8 +42,8 @@ describe('POST Address routes', () => {
       .set('Accept', 'application/json')
       .set('authorization', `Bearer ${token}`)
       .expect(200);
-    expect(response.body[0].name).toEqual(addressObject.name);
-    expect(response.body[0].line1).toEqual(addressObject.line1);
+    expect(response.body.data[0].name).toEqual(addressObject.name);
+    expect(response.body.data[0].line1).toEqual(addressObject.line1);
   });
 });
 

@@ -1,18 +1,21 @@
 const dotenv = require('dotenv');
 
-function loadEnv() {
-  if (process.env.NODE_ENV !== 'production') {
-    dotenv.config({
-      path:
-        process.env.NODE_ENV === 'test'
-          ? '.env.test'
-          : process.env.NODE_ENV === 'ci'
-          ? '.env.ci'
-          : '.env',
-    });
-  } else {
-    dotenv.config(); // Load default .env for production
+const loadEnv = () => {
+  let path = '';
+  switch (process.env.NODE_ENV) {
+    case 'production':
+      path = '.env';
+      break;
+    case 'test':
+      path = '.env.test';
+      break;
+    case 'ci':
+      path = '.env.ci';
+      break;
+    default:
+      path = '.env';
   }
-}
+  dotenv.config({ path });
+};
 
 module.exports = loadEnv;

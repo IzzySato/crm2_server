@@ -1,55 +1,69 @@
 'use strict';
-const logger = require('../../../lib/logger');
-const Job = require('../../models/Job');
+const handleDatabaseOperation = require('../../../utils/handleDatabaseOperation');
+const { JobModel } = require('../../models/Job');
 const { convertIdStringToObjectId } = require('../utils/convertObjectId');
 
 /**
+ * handleDatabaseOperation is handling errors
  * add a new job | add new jobs
  * @param {*} job Object or Array
  * @returns { total: number, data: Job[] }
  */
 const addJob = async (job) => {
-  try {
+  return handleDatabaseOperation(async () => {
     if (Array.isArray(job)) {
       job = job.map((j) => {
         return {
           ...j,
-          customerId: j.customerId ? convertIdStringToObjectId(j.customerId) : null,
-          companyId: j.companyId ? convertIdStringToObjectId(j.companyId) : null,
-          products: j.products.length > 0 ? j.products.map((j) => convertIdStringToObjectId(j)) : [],
+          customerId: j.customerId
+            ? convertIdStringToObjectId(j.customerId)
+            : null,
+          companyId: j.companyId
+            ? convertIdStringToObjectId(j.companyId)
+            : null,
+          products:
+            j.products.length > 0
+              ? j.products.map((j) => convertIdStringToObjectId(j))
+              : [],
         };
       });
     } else {
       job = {
         ...job,
-        customerId: job.customerId ? convertIdStringToObjectId(job.customerId) : null,
-        companyId: job.companyId ? convertIdStringToObjectId(job.companyId) : null,
-        products: job.products.length > 0 ? job.products.map((j) => convertIdStringToObjectId(j)) : [],
+        customerId: job.customerId
+          ? convertIdStringToObjectId(job.customerId)
+          : null,
+        companyId: job.companyId
+          ? convertIdStringToObjectId(job.companyId)
+          : null,
+        products:
+          job.products.length > 0
+            ? job.products.map((j) => convertIdStringToObjectId(j))
+            : [],
       };
     }
-    return await Job.insertMany(job);
-  } catch (error) {
-    logger.error(error.toString());
-    throw error;
-  }
+    return await JobModel.insertMany(job);
+  });
 };
 
 /**
+ * handleDatabaseOperation is handling errors
  * update a job or soft delete a job
  * @param {*} _id string job id
  * @param {*} updateField Object e.g. { note: string }
- * @returns
+ * @returns updated job object
  */
 const updateJob = async (_id, updateField) => {
-  try {
-    return await Job.findOneAndUpdate({ _id }, updateField, { returnDocument: 'after'});
-  } catch (error) {
-    logger.error(error.toString());
-    throw error;
-  }
+  return handleDatabaseOperation(
+    async () =>
+      await JobModel.findOneAndUpdate({ _id }, updateField, {
+        returnDocument: 'after',
+      })
+  );
 };
 
 /**
+ * handleDatabaseOperation is handling errors
  * get jobs for a page
  * @param { pageNum: number, length: number, sortBy: string, fields: string, searchBy: string} param0
  * @param { isCache: boolean } param1
@@ -65,7 +79,7 @@ const getJobs = async (
   },
   { isCache = false }
 ) => {
-  try {
+  return handleDatabaseOperation(async () => {
     const findObj =
       searchBy === ''
         ? {}
@@ -79,8 +93,8 @@ const getJobs = async (
               { note: { $regex: searchBy, $options: 'i' } },
             ],
           };
-    const baseQuery = Job.where({ deletedAt: null }).find(findObj);
-    const total = await Job.where({ deletedAt: null })
+    const baseQuery = JobModel.where({ deletedAt: null }).find(findObj);
+    const total = await JobModel.where({ deletedAt: null })
       .find(findObj)
       .countDocuments();
     const query = baseQuery
@@ -97,24 +111,17 @@ const getJobs = async (
       const data = await query;
       return { data, total };
     }
-  } catch (error) {
-    logger.error(error.toString());
-    throw error;
-  }
+  });
 };
 
 /**
+ * handleDatabaseOperation is handling errors
  * Get a Job by job id
  * @param {*} id job id
  * @returns Job object
  */
 const getJobById = async (_id) => {
-  try {
-    return await Job.findOne({ _id });
-  } catch (error) {
-    logger.error(error.toString());
-    throw error;
-  }
+  return handleDatabaseOperation(async () => await JobModel.findOne({ _id }));
 };
 
 module.exports = { addJob, getJobById, getJobs, updateJob };

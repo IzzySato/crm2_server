@@ -1,21 +1,23 @@
 'use strict';
 const { describe, test } = require('@jest/globals');
 const request = require('supertest');
-const app = require('../../../app');
-const { setup, addUserGetToken } = require('../../../database/testUtils/setup');
-const Product = require('../../../database/models/Product');
+const app = require('../../../../app');
+const { setup, addUserGetToken } = require('../../../../database/testUtils/setup');
 const {
   productSampleData,
-} = require('../../../database/testUtils/testData/productData');
-const User = require('../../../database/models/User');
+} = require('../../../../database/testUtils/testData/productData');
+const { ProductModel } = require('../../../../database/models/Product');
+const { UserModel } = require('../../../../database/models/User');
 
 beforeAll(() => {
-  setup.beforeAllNoCache();
+  setup.turnOffCache();
 });
-afterAll(setup.afterAll);
+afterAll(async () => {
+  await setup.afterAll();
+});
 beforeEach(async () => {
-  await Product.deleteMany({});
-  await User.deleteMany({});
+  await ProductModel.deleteMany({});
+  await UserModel.deleteMany({});
 });
 
 describe('GET Product routes', () => {
@@ -29,7 +31,7 @@ describe('GET Product routes', () => {
 
   test('GET /product/:id', async () => {
     const productObject = productSampleData[0];
-    const product = await Product.create(productObject);
+    const product = await ProductModel.create(productObject);
     const token = await addUserGetToken();
     await request(app)
       .get(`/product/${product._id.toString()}`)

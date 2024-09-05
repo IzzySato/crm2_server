@@ -4,21 +4,23 @@ const request = require('supertest');
 const {
   setup,
   addUserGetToken,
-} = require('../../../database/testUtils/setup');
-const Job = require('../../../database/models/Job');
-const User = require('../../../database/models/User');
+} = require('../../../../database/testUtils/setup');
 const {
   jobSampleData,
-} = require('../../../database/testUtils/testData/jobData');
-const app = require('../../../app');
+} = require('../../../../database/testUtils/testData/jobData');
+const app = require('../../../../app');
+const { JobModel } = require('../../../../database/models/Job');
+const { UserModel } = require('../../../../database/models/User');
 
 beforeAll(() => {
-  setup.beforeAllNoCache();
+  setup.turnOffCache();
 });
-afterAll(setup.afterAll);
+afterAll(async () => {
+  await setup.afterAll();
+});
 beforeEach(async () => {
-  await Job.deleteMany({});
-  await User.deleteMany({});
+  await JobModel.deleteMany({});
+  await UserModel.deleteMany({});
 });
 
 describe('GET Job routes', () => {
@@ -31,7 +33,7 @@ describe('GET Job routes', () => {
   });
 
   test('GET /job/:id return the correct data', async () => {
-    const job = await Job.create(jobSampleData[0]);
+    const job = await JobModel.create(jobSampleData[0]);
     const token = await addUserGetToken();
     const response = await request(app)
       .get(`/job/${job._id.toString()}`)
@@ -44,7 +46,7 @@ describe('GET Job routes', () => {
 
 describe('PUT Job routes', () => {
   test('PUT /job/:id', async () => {
-    const job = await Job.create(jobSampleData[0]);
+    const job = await JobModel.create(jobSampleData[0]);
     expect(job.jobType).toBe('Home Improvments');
     const token = await addUserGetToken();
     const response = await request(app)
@@ -53,7 +55,7 @@ describe('PUT Job routes', () => {
       .send({ jobType: 'Kitchen Renovation' })
       .set('Accept', 'application/json');
     expect(response.status).toBe(200);
-    const updatedJob = await Job.findById(job._id);
+    const updatedJob = await JobModel.findById(job._id);
     expect(updatedJob.jobType).toBe('Kitchen Renovation');
   });
 });

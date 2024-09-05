@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { dbConnect } = require('../dbConfig');
 
 const QuoteSchema = new mongoose.Schema({
   jobType: {
@@ -43,4 +44,6 @@ const QuoteSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Quote', QuoteSchema);
+module.exports = {
+  QuoteModel: dbConnect().model('Quote', QuoteSchema),
+};

@@ -53,6 +53,11 @@ npm start
 ```
 
 5. Test (Jest)
+- unit test
 ```bash
-npm test
+npm run test:unit
+```
+- integration test
+```bash
+npm run test:integration
 ```

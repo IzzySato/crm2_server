@@ -1,10 +1,12 @@
+const ValidationError = require("../errors/ValidationError");
+
 const validateRequiredField = (requiredFiels, obj) => {
   requiredFiels.forEach(({ name, type }) => {
     if (!obj[name]) {
-      throw new Error(`Missing field ${name}`);
+      throw new ValidationError(`Missing field ${name}`);
     }
     if (typeof obj[name] !== type) {
-      throw new Error(`Invalid type for field: ${name}, expected ${type}`);
+      throw new ValidationError(`Invalid type for field: ${name}, expected ${type}`);
     }
   });
 };
@@ -12,7 +14,7 @@ const validateRequiredField = (requiredFiels, obj) => {
 const validateInputs = ({ requiredFiels, bodyData, modelName }) => {
   if (Array.isArray(bodyData)) {
     if (bodyData.length <= 0) {
-      throw new Error(`${modelName} array cannot be empty`);
+      throw new ValidationError(`${modelName} array cannot be empty`);
     }
     bodyData.forEach((obj) => validateRequiredField(requiredFiels, obj));
   } else {

@@ -1,5 +1,6 @@
 'use strict';
 const mongoose = require('mongoose');
+const { dbConnect } = require('../dbConfig');
 
 const CustomerSchema = new mongoose.Schema({
   firstName: {
@@ -39,4 +40,6 @@ const CustomerSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Customer', CustomerSchema);
+module.exports = {
+  CustomerModel: dbConnect().model('Customer', CustomerSchema)
+};

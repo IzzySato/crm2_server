@@ -1,14 +1,15 @@
 'use strict';
 const { describe, expect, test } = require('@jest/globals');
-const { addCompany } = require('..');
-const { setup } = require('../../../testUtils/setup');
-const Company = require('../../../models/Company');
-const { companySampleData } = require('../../../testUtils/testData/companyData');
+const { addCompany } = require('../..');
+const { setup } = require('../../../../testUtils/setup');
+const { companySampleData } = require('../../../../testUtils/testData/companyData');
+const { CompanyModel } = require('../../../../models/Company');
 
-beforeAll(setup.beforeAll);
-afterAll(setup.afterAll);
+afterAll(async () => {
+  await setup.afterAll(true);
+});
 beforeEach(async () => {
-  await Company.deleteMany({});
+  await CompanyModel.deleteMany({});
 });
 
 describe('Add Company', () => {

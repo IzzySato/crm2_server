@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { dbConnect } = require('../dbConfig');
 
 const ProductSchema = new mongoose.Schema({
   name: {
@@ -34,4 +35,6 @@ const ProductSchema = new mongoose.Schema({
   pricing: mongoose.Schema.Types.Mixed,
 });
 
-module.exports = mongoose.model('Product', ProductSchema);
+module.exports = {
+  ProductModel: dbConnect().model('Product', ProductSchema)
+};

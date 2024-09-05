@@ -8,7 +8,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "cross-env NODE_ENV=test jest --testTimeout=50000",
+    "test:unit": "cross-env NODE_ENV=test TEST_TYPE=unit jest --testPathPattern=__tests__/unit --testTimeout=50000 && npm run posttest",
+    "test:integration": "cross-env NODE_ENV=test TEST_TYPE=integration jest --testPathPattern=__tests__/integration --testTimeout=50000 && npm run posttest",
     "posttest": "NODE_ENV=test node ./database/testUtils/posttest.js"
   },
   "keywords": [],

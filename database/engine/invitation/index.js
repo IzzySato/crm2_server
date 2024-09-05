@@ -1,24 +1,28 @@
 'use strict';
-const logger = require('../../../lib/logger');
-const Invitation = require('../../models/Invitation');
+const handleDatabaseOperation = require('../../../utils/handleDatabaseOperation');
+const { InvitationModel } = require('../../models/Invitation');
 
+/**
+ * handleDatabaseOperation is handling errors
+ * @param {*} email string email
+ * @returns invitation
+ */
 const getInvitationByEmail = async (email) => {
-  try {
-    return await Invitation.findOne({ email });
-  } catch (error) {
-    logger.error(error.toString());
-    throw error;
-  }
+  return handleDatabaseOperation(
+    async () => await InvitationModel.findOne({ email })
+  );
 };
 
+/**
+ * handleDatabaseOperation is handling errors
+ * @param {*} invitation object
+ * @returns array of invitation
+ */
 const addInvitation = async (invitation) => {
-  try {
+  return handleDatabaseOperation(async () => {
     invitation = Array.isArray(invitation) ? invitation : [invitation];
-    return await Invitation.insertMany(invitation);
-  } catch (error) {
-    logger.error(error.toString());
-    throw error;
-  }
+    return await InvitationModel.insertMany(invitation);
+  });
 };
 
 module.exports = {

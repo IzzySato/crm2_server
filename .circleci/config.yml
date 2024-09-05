@@ -15,7 +15,7 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run:
-          command: NODE_ENV=ci npm test
+          command: NODE_ENV=ci npm run test:unit 
           name: Run tests
       - run:
           name: Run posttest cleanup

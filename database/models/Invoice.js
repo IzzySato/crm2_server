@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { dbConnect } = require('../dbConfig');
 
 const InvoiceSchema = new mongoose.Schema({
   jobType: {
@@ -43,4 +44,6 @@ const InvoiceSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Invoice', InvoiceSchema);
+module.exports = {
+  InvoiceModel: dbConnect().model('Invoice', InvoiceSchema),
+};

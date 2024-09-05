@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { dbConnect } = require('../dbConfig');
 
 const UserSchema = new mongoose.Schema({
   firstName: {
@@ -33,4 +34,6 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('user', UserSchema);
+module.exports = {
+  UserModel: dbConnect().model('User', UserSchema),
+};

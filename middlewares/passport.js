@@ -2,7 +2,10 @@
 const passport = require('passport');
 const { findOrCreate } = require('../database/engine/user');
 const User = require('../database/models/User');
+const loadEnv = require('../config/env');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
+loadEnv();
 
 passport.use(
   new GoogleStrategy(

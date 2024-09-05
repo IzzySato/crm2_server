@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { dbConnect } = require('../dbConfig');
 
 const PermissionRequestSchema = new mongoose.Schema({
   userId: {
@@ -29,4 +30,11 @@ const PermissionRequestSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('PermissionRequest', PermissionRequestSchema);
+module.exports = PermissionRequestSchema;
+
+module.exports = {
+  PermissionRequestModel: dbConnect().model(
+    'PermissionRequest',
+    PermissionRequestSchema
+  ),
+};

@@ -1,15 +1,16 @@
 'use strict';
-const logger = require('../../../lib/logger');
-const Customer = require('../../models/Customer');
+const handleDatabaseOperation = require('../../../utils/handleDatabaseOperation');
+const { CustomerModel } = require('../../models/Customer');
 const { convertIdStringToObjectId } = require('../utils/convertObjectId');
 
 /**
+ * handleDatabaseOperation is handling errors
  * Insert customers
  * @param {*} customers array of the customers or object of customer
  * @returns { total: number, data: [Customer] }
  */
 const addCustomer = async (customers) => {
-  try {
+  return handleDatabaseOperation(async () => {
     if (Array.isArray(customers)) {
       customers = customers.map((customer) => {
         return {
@@ -29,22 +30,31 @@ const addCustomer = async (customers) => {
         companyId: convertIdStringToObjectId(customers.companyId),
       };
     }
-    return await Customer.insertMany(customers);
-  } catch (error) {
-    logger.error(error.toString());
-    throw error;
-  }
+    return await CustomerModel.insertMany(customers);
+  });
 };
 
+/**
+ * handleDatabaseOperation is handling errors
+ * @param {*} _id string customer id
+ * @param {*} updateField object customer field that need to update
+ * @returns
+ */
 const updateCustomer = async (_id, updateField) => {
-  try {
-    return await Customer.findOneAndUpdate({ _id }, updateField, { returnDocument: 'after'});
-  } catch (error) {
-    logger.error(error.toString());
-    throw error;
-  }
+  return handleDatabaseOperation(
+    async () =>
+      await CustomerModel.findOneAndUpdate({ _id }, updateField, {
+        returnDocument: 'after',
+      })
+  );
 };
 
+/**
+ * handleDatabaseOperation is handling errors
+ * @param {*} param0 params
+ * @param {*} param1 cache options
+ * @returns customers array
+ */
 const getCustomers = async (
   {
     pageNum = 1,
@@ -55,7 +65,7 @@ const getCustomers = async (
   },
   { isCache = false }
 ) => {
-  try {
+  return handleDatabaseOperation(async () => {
     const findObj =
       searchBy === ''
         ? {}
@@ -67,33 +77,36 @@ const getCustomers = async (
               { phone: { $regex: searchBy, $options: 'i' } },
             ],
           };
-    const baseQuery = Customer.where({ deletedAt: null }).find(findObj);
-    const total = await Customer.where({ deletedAt: null }).find(findObj).countDocuments();
+    const baseQuery = CustomerModel.where({ deletedAt: null }).find(findObj);
+    const total = await CustomerModel.where({ deletedAt: null })
+      .find(findObj)
+      .countDocuments();
     const query = baseQuery
-        .skip((parseInt(pageNum) - 1) * parseInt(length))
-        .sort(sortBy)
-        .limit(parseInt(length))
-        .select(fields);
+      .skip((parseInt(pageNum) - 1) * parseInt(length))
+      .sort(sortBy)
+      .limit(parseInt(length))
+      .select(fields);
     if (isCache) {
-      const data = await query.cache(`customers_${searchBy}_${pageNum}_${fields}_${length}_${sortBy}`);
+      const data = await query.cache(
+        `customers_${searchBy}_${pageNum}_${fields}_${length}_${sortBy}`
+      );
       return { data, total };
     } else {
       const data = await query;
       return { data, total };
     }
-  } catch (error) {
-    logger.error(error.toString());
-    throw error;
-  }
+  });
 };
 
+/**
+ * handleDatabaseOperation is handling errors
+ * @param {*} _id string customer id
+ * @returns customer obejct with the id
+ */
 const getCustomerById = async (_id) => {
-  try {
-    return await Customer.findOne({ _id });
-  } catch (error) {
-    logger.error(error.toString());
-    throw error;
-  }
+  return handleDatabaseOperation(
+    async () => await CustomerModel.findOne({ _id })
+  );
 };
 
 module.exports = { addCustomer, getCustomerById, getCustomers, updateCustomer };

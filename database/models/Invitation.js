@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { dbConnect } = require('../dbConfig');
 
 const InvitationSchema = new mongoose.Schema({
   invitedBy: {
@@ -32,4 +33,6 @@ const InvitationSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Invitation', InvitationSchema);
+module.exports = {
+  InvitationModel: dbConnect().model('Invitation', InvitationSchema)
+};

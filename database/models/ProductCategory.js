@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { dbConnect } = require('../dbConfig');
 
 const ProductCategorySchema = new mongoose.Schema({
   name: {
@@ -30,4 +31,9 @@ const ProductCategorySchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('ProductCategory', ProductCategorySchema);
+module.exports = {
+  ProductCategoryModel: dbConnect().model(
+    'ProductCategory',
+    ProductCategorySchema
+  ),
+};

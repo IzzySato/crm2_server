@@ -3,6 +3,7 @@ const express = require('express');
 const { addUser, deleteUser } = require('../../database/engine/user');
 const { authenticateJWT } = require('../../middlewares/auth');
 const userResultSchema = require('../../schemas/userResultSchema');
+const NotFoundError = require('../../errors/NotFoundError');
 const router = express.Router();
 
 router.get('/:id', authenticateJWT, async (req, res, next) => {
@@ -47,9 +48,7 @@ router.delete('/:id', authenticateJWT, async (req, res, next) => {
     const id = req.params.id;
     const result = await deleteUser(id);
     if (!result) {
-      const error = new Error(`User with ID ${id} not found`);
-      error.status = 404;
-      throw error;
+      throw new NotFoundError(`User with ID ${id}`);
     }
     res.json(userResultSchema(result));
   } catch (error) {

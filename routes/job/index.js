@@ -9,6 +9,7 @@ const {
 } = require('../../database/engine/jobs');
 const jobResultSchema = require('../../schemas/jobResultSchema');
 const { validateInputs } = require('../../validation');
+const NotFoundError = require('../../errors/NotFoundError');
 const router = express.Router();
 
 router.get('/', authenticateJWT, async (req, res, next) => {
@@ -32,9 +33,7 @@ router.get('/:id', authenticateJWT, async (req, res) => {
     const id = req.params.id;
     const result = await getJobById(id);
     if (!result) {
-      const error = new Error(`Job with ID ${id} not found`);
-      error.status = 404;
-      throw error;
+      throw new NotFoundError(`Job with ID ${id}`);
     }
     res.json(jobResultSchema(result));
   } catch (error) {
@@ -70,9 +69,7 @@ router.put('/:id', authenticateJWT, async (req, res) => {
     const updateObj = req.body;
     const result = await updateJob(id, updateObj);
     if (!result) {
-      const error = new Error(`Job with ID ${id} not found`);
-      error.status = 404;
-      throw error;
+      throw new NotFoundError(`Job with ID ${id}`);
     }
     res.json(jobResultSchema(result));
   } catch (error) {

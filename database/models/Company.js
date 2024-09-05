@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { dbConnect } = require('../dbConfig');
 
 const CompanySchema = new mongoose.Schema({
   businessName: {
@@ -28,4 +29,6 @@ const CompanySchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Company', CompanySchema);
+module.exports = {
+  CompanyModel: dbConnect().model('Company', CompanySchema)
+};

@@ -2,12 +2,12 @@
 const mongoose = require('mongoose');
 const logger = require('../../lib/logger');
 const loadEnv = require('../../config/env');
+const { dbConnect } = require('../dbConfig');
 
 (async () => {
   try {
     loadEnv();
-    await mongoose.connect(process.env.MONGODB_URI);
-    await mongoose.connection.dropDatabase();
+    await dbConnect().dropDatabase();
     logger.info('Database dropped successfully.');
   } catch (error) {
     logger.error('Error dropping the database:', error);

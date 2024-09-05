@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { dbConnect } = require('../dbConfig');
 
 const NotificationSchema = new mongoose.Schema({
   type: {
@@ -28,4 +29,8 @@ const NotificationSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Notification', NotificationSchema);
+module.exports = NotificationSchema;
+
+module.exports = {
+  NotificationModel: dbConnect().model('Notification', NotificationSchema)
+};

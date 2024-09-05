@@ -1,16 +1,17 @@
 'use strict';
-const logger = require('../../../lib/logger');
 const { deleteImage } = require('../../../lib/s3');
-const Product = require('../../models/Product');
+const handleDatabaseOperation = require('../../../utils/handleDatabaseOperation');
+const { ProductModel } = require('../../models/Product');
 const { convertIdStringToObjectId } = require('../utils/convertObjectId');
 
 /**
+ * handleDatabaseOperation is handling errors
  * Insert Products
  * @param {*} products array of products or product object
  * @return { total: number, data: [Product] }
  */
 const addProduct = async (products) => {
-  try {
+  return handleDatabaseOperation(async () => {
     if (Array.isArray(products)) {
       products = products.map((product) => ({
         ...product,
@@ -26,24 +27,26 @@ const addProduct = async (products) => {
           : null,
       };
     }
-    return await Product.insertMany(products);
-  } catch (error) {
-    logger.error(error.toString());
-    throw error;
-  }
+    return await ProductModel.insertMany(products);
+  });
 };
 
-const getProductById = async (id, { isCache = false }) => {
-  try {
-    return isCache
-      ? await Product.findOne({ _id: id }).cache(id)
-      : await Product.findOne({ _id: id });
-  } catch (error) {
-    logger.error(error.toString());
-    throw error;
-  }
+/**
+ * handleDatabaseOperation is handling errors
+ * @param {*} _id string
+ * @param {*} isCache boolean
+ * @returns
+ */
+const getProductById = async (_id) => {
+  return handleDatabaseOperation(async () => await ProductModel.findOne({ _id }));
 };
 
+/**
+ * handleDatabaseOperation is handling errors
+ * @param {*} param0 params
+ * @param {*} param1 cache
+ * @returns products array
+ */
 const getProducts = async (
   {
     pageNum = 1,
@@ -54,7 +57,7 @@ const getProducts = async (
   },
   { isCache = false }
 ) => {
-  try {
+  return handleDatabaseOperation(async () => {
     const findObj =
       searchBy === ''
         ? {}
@@ -66,8 +69,8 @@ const getProducts = async (
               { description: { $regex: searchBy, $options: 'i' } },
             ],
           };
-    const baseQuery = Product.where({ deletedAt: null }).find(findObj);
-    const total = await Product.where({ deletedAt: null })
+    const baseQuery = ProductModel.where({ deletedAt: null }).find(findObj);
+    const total = await ProductModel.where({ deletedAt: null })
       .find(findObj)
       .countDocuments();
     const query = baseQuery
@@ -84,28 +87,28 @@ const getProducts = async (
       const data = await query;
       return { data, total };
     }
-  } catch (error) {
-    logger.error(error.toString());
-    throw error;
-  }
+  });
 };
 
+/**
+ * handleDatabaseOperation is handling errors
+ * @param {*} _id string product id
+ * @param {*} updateField object of product field
+ * @returns updated product object
+ */
 const updateProduct = async (_id, updateField) => {
-  try {
+  return handleDatabaseOperation(async () => {
     if (updateField.deletedAt) {
-      const product = await Product.findById(_id);
+      const product = await ProductModel.findById(_id);
       if (product.imageUrl !== '') {
         deleteImage(product.imageUrl);
       }
       updateField.imageUrl = '';
     }
-    return await Product.findOneAndUpdate({ _id }, updateField, {
+    return await ProductModel.findOneAndUpdate({ _id }, updateField, {
       returnDocument: 'after',
     });
-  } catch (error) {
-    logger.error(error.toString());
-    throw error;
-  }
+  });
 };
 
 module.exports = {

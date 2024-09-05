@@ -3,14 +3,17 @@ const mongoose = require('mongoose');
 const logger = require('../lib/logger');
 const loadEnv = require('../config/env');
 
+loadEnv();
+
 const dbConnect = () => {
   try {
-    loadEnv();
-    mongoose.connect(process.env.MONGODB_URI);
-    const db = mongoose.connection;
-    db.on('error', (error) => logger.error(error));
-    db.once('open', () => logger.info('Connect to Database'));
+    let dbName = process.env.MONGODB_URI;
+    if (process.env.NODE_ENV === 'test') {
+      dbName = process.env.MONGODB_URI.replace('${NAME}', process.env.TEST_TYPE)
+    }
+    return mongoose.createConnection(dbName);
   } catch (err) {
+    logger.error(err.toString());
     throw err;
   }
 };

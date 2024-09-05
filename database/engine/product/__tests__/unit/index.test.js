@@ -1,14 +1,15 @@
 'use strict';
 const { describe, expect, test } = require('@jest/globals');
-const { setup } = require('../../../testUtils/setup');
-const Product = require('../../../models/Product');
-const { addProduct, getProductById, getProducts, updateProduct } = require('..');
-const { productSampleData } = require('../../../testUtils/testData/productData');
+const { setup } = require('../../../../testUtils/setup');
+const { addProduct, getProductById, getProducts, updateProduct } = require('../..');
+const { productSampleData } = require('../../../../testUtils/testData/productData');
+const { ProductModel } = require('../../../../models/Product');
 
-beforeAll(setup.beforeAll);
-afterAll(setup.afterAll);
+afterAll(async () => {
+  await setup.afterAll();
+});
 beforeEach(async () => {
-  await Product.deleteMany({});
+  await ProductModel.deleteMany({});
 });
 
 describe('Get Product', () => {
@@ -16,7 +17,7 @@ describe('Get Product', () => {
     const productObject = productSampleData[0];
     const addedProduct = await addProduct(productObject);
     const id = addedProduct[0]._id.toString();
-    const result = await getProductById(id, { isCache: false });
+    const result = await getProductById(id);
     expect(result.name).toBe(productSampleData[0].name);
   });
 

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { dbConnect } = require('../dbConfig');
 
 const JobSchema = new mongoose.Schema({
   jobType: {
@@ -40,4 +41,6 @@ const JobSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Job', JobSchema);
+module.exports = {
+  JobModel: dbConnect().model('Job', JobSchema)
+};

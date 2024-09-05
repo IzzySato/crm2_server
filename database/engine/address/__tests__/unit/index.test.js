@@ -1,14 +1,15 @@
 'use strict';
 const { describe, expect, test } = require('@jest/globals');
-const { addAddress, getAddressById } = require('..');
-const { setup } = require('../../../testUtils/setup');
-const Address = require('../../../models/Address');
-const { addressesSampleData } = require('../../../testUtils/testData/addressData');
+const { addAddress, getAddressById } = require('../..');
+const { setup } = require('../../../../testUtils/setup');
+const { addressesSampleData } = require('../../../../testUtils/testData/addressData');
+const { AddressModel } = require('../../../../models/Address');
 
-beforeAll(setup.beforeAll);
-afterAll(setup.afterAll);
+afterAll(async () => {
+  await setup.afterAll(true);
+});
 beforeEach(async () => {
-  await Address.deleteMany({});
+  await AddressModel.deleteMany({});
 });
 
 describe('Get address', () => {

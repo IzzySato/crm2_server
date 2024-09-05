@@ -1,13 +1,14 @@
 const { describe, expect, test } = require('@jest/globals');
-const { findOrCreate, addUser } = require('..');
-const { setup } = require('../../../testUtils/setup');
-const { userSampleData } = require('../../../testUtils/testData/userDara');
-const User = require('../../../models/User');
+const { findOrCreate, addUser } = require('../..');
+const { setup } = require('../../../../testUtils/setup');
+const { userSampleData } = require('../../../../testUtils/testData/userDara');
+const { UserModel } = require('../../../../models/User');
 
-beforeAll(setup.beforeAll);
-afterAll(setup.afterAll);
+afterAll(async () => {
+  await setup.afterAll();
+});
 beforeEach(async () => {
-  await User.deleteMany({});
+  await UserModel.deleteMany({});
 });
 
 describe('Add User', () => {

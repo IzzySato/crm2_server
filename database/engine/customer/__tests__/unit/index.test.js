@@ -1,19 +1,22 @@
 'use strict';
 const { describe, expect, test } = require('@jest/globals');
-const { setup } = require('../../../testUtils/setup');
+const { setup } = require('../../../../testUtils/setup');
 const {
   addCustomer,
   getCustomerById,
   updateCustomer,
   getCustomers,
-} = require('..');
-const { customerSampleData } = require('../../../testUtils/testData/customerData');
-const Customer = require('../../../models/Customer');
+} = require('../..');
+const {
+  customerSampleData,
+} = require('../../../../testUtils/testData/customerData');
+const { CustomerModel } = require('../../../../models/Customer');
 
-beforeAll(setup.beforeAll);
-afterAll(setup.afterAll);
+afterAll(async () => {
+  await setup.afterAll();
+});
 beforeEach(async () => {
-  await Customer.deleteMany({});
+  await CustomerModel.deleteMany({});
 });
 
 describe('Get Customer', () => {
@@ -22,7 +25,6 @@ describe('Get Customer', () => {
     const addedCustomer = await addCustomer(customerObject);
     const id = addedCustomer[0]._id.toString();
     const result = await getCustomerById(id);
-    console.log('cusRe', result)
     expect(result.firstName).toBe(customerObject.firstName);
   });
 
@@ -43,12 +45,15 @@ describe('Get Customer', () => {
     const addedCustomers = await addCustomer(customerArray);
     expect(addedCustomers.length).toBe(19);
     // Filtered out if deletedAt is not null
-    const result = await getCustomers({
-      pageNum: 1,
-      length: 10,
-      sortBy: 'firstName',
-      fields: 'firstName lastName email phone _id'
-    }, { isCache: false });
+    const result = await getCustomers(
+      {
+        pageNum: 1,
+        length: 10,
+        sortBy: 'firstName',
+        fields: 'firstName lastName email phone _id',
+      },
+      { isCache: false }
+    );
     expect(result.data.length).toBe(10);
     expect(result.data[0].firstName).toBe('Barbara');
   });
@@ -90,7 +95,7 @@ describe('Update Customer', () => {
     const id = addedCustomer[0]._id.toString();
     const today = new Date();
     // testing for soft delete
-    const result = await updateCustomer( id, { deletedAt: today });
+    const result = await updateCustomer(id, { deletedAt: today });
     expect(result.deletedAt).not.toBe(null);
   });
 });

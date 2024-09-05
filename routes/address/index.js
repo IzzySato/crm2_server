@@ -8,6 +8,7 @@ const {
 const { authenticateJWT } = require('../../middlewares/auth');
 const addressResultSchema = require('../../schemas/addressResultSchema');
 const { validateInputs } = require('../../validation');
+const NotFoundError = require('../../errors/NotFoundError');
 const router = express.Router();
 
 router.get('/:id', authenticateJWT, async (req, res, next) => {
@@ -15,9 +16,7 @@ router.get('/:id', authenticateJWT, async (req, res, next) => {
     const id = req.params.id;
     const result = await getAddressById(id);
     if (!result) {
-      const error = new Error(`Address with ID ${id} not found`);
-      error.status = 404;
-      throw error;
+      throw new NotFoundError(`Address with ID ${id} not found`);
     }
     res.json(addressResultSchema(result));
   } catch (error) {
@@ -27,13 +26,14 @@ router.get('/:id', authenticateJWT, async (req, res, next) => {
 
 router.post('/', authenticateJWT, async (req, res, next) => {
   try {
+    const address = req.body;
     const requiredFiels = [
       { name: 'line1', type: 'string' },
       { name: 'city', type: 'string' },
       { name: 'province', type: 'string' },
     ];
-    validateInputs({ requiredFiels, bodyData: req.body, modelName: 'Address' });
-    const data = await addAddress(req.body);
+    validateInputs({ requiredFiels, bodyData: address, modelName: 'Address' });
+    const data = await addAddress(address);
     res.json({
       total: data.length,
       data: data.map(addressResultSchema)
@@ -43,15 +43,13 @@ router.post('/', authenticateJWT, async (req, res, next) => {
   }
 });
 
-router.put('/:id', authenticateJWT, async (req, res) => {
+router.put('/:id', authenticateJWT, async (req, res, next) => {
   try {
     const id = req.params.id;
     const updateObj = req.body;
     const result = await updateAddress(id, updateObj);
     if (!result) {
-      const error = new Error(`Address with ID ${id} not found`);
-      error.status = 404;
-      throw error;
+      throw new NotFoundError(`Address with ID ${id}`);
     }
     res.json(addressResultSchema(result));
   } catch (error) {

@@ -16,6 +16,7 @@ const { dbConnect } = require('./database/dbConfig.js');
 const passport = require('passport');
 const session = require('express-session');
 const loadEnv = require('./config/env.js');
+const CustomError = require('./errors/CustomError.js');
 
 loadEnv();
 
@@ -86,6 +87,13 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
+  if (err instanceof CustomError) {
+    // Custom error handling
+    return res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message,
+    });
+  }
   const statusCode = err.status || 500;
   res.status(statusCode).json({
     status: statusCode,

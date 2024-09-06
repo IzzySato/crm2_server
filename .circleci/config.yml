@@ -8,15 +8,13 @@ jobs:
     executor: node/default
     environment:
       NODE_ENV: ci
-      JWT_SECRET: ci_jwt_secret
-      SERVER_URL: http://localhost:8080
     steps:
       - checkout
       - node/install-packages:
           pkg-manager: npm
       - run:
+          name: Run unit tests
           command: NODE_ENV=ci npm run test:unit 
-          name: Run tests
       - run:
           name: Run posttest cleanup
           command: NODE_ENV=ci npm run posttest

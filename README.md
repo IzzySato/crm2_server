@@ -46,6 +46,13 @@ JWT_SECRET=your_jwt_key
 S3_ACCESS_KEY_ID=your_s3_access_id
 S3_SECRET_ACCESS_KEY=your_s3_secret_access_key
 
+## CI
+- **`MONGODB_URI`**: setup in CircleCi website Project Settings (Need to login)
+  - We are only testing in unit test since we don't have staging site. so we don't need the other variables
+
+## Test
+- **`MONGODB_URI`**: The MongoDB connection string. Replace `${NAME}` with `test` or `integration` for respective test environments.
+
 4.  Run the server
 ```bash
 # listening to the port 8080

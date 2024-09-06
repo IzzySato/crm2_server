@@ -4,7 +4,6 @@ const handleDatabaseOperation = require('../../../utils/handleDatabaseOperation'
 const { UserModel } = require('../../models/User');
 const { getInvitationByEmail } = require('../invitation');
 
-
 // Google OAuth
 const findOrCreate = async ({
   id,
@@ -36,23 +35,29 @@ const findOrCreate = async ({
   }
 };
 
+/**
+ * handleDatabaseOperation is handling errors
+ * Insert User
+ * @param user array of users or user object
+ * @return array of users
+ */
 const addUser = async (user) => {
-  try {
+  return handleDatabaseOperation(async () => {
     user = Array.isArray(user) ? user : [user];
     return await UserModel.insertMany(user);
-  } catch (error) {
-    logger.error(error.toString());
-    throw error;
-  }
+  });
 };
 
+/**
+ * handleDatabaseOperation is handling errors
+ * Delete User
+ * @param _id string user id
+ * @return { acknowledged, deletedCount }
+ */
 const deleteUser = async (_id) => {
-  try {
-    return await UserModel.deleteOne({ _id })
-  } catch (error) {
-    logger.error(error.toString());
-    throw error;
-  }
+  return handleDatabaseOperation(
+    async () => await UserModel.deleteOne({ _id })
+  );
 };
 
 /**
@@ -61,7 +66,22 @@ const deleteUser = async (_id) => {
  * @returns user with the id
  */
 const getUserById = async (id) => {
-  return handleDatabaseOperation(async () => await UserModel.findById(id))
+  return handleDatabaseOperation(async () => await UserModel.findById(id));
+};
+
+/**
+ * handleDatabaseOperation is handling errors
+ * @param _id user string
+ * @param updateField object of update field
+ * @returns updated user object
+ */
+const updateUser = async (_id, updateField) => {
+  return handleDatabaseOperation(
+    async () =>
+      await UserModel.findOneAndUpdate({ _id }, updateField, {
+        returnDocument: 'after',
+      })
+  );
 };
 
 module.exports = {
@@ -69,4 +89,5 @@ module.exports = {
   addUser,
   getUserById,
   deleteUser,
- };
+  updateUser,
+};

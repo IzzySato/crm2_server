@@ -64,16 +64,16 @@ describe('Add Customer', () => {
     const customerObject = customerSampleData[0];
     const result = await addCustomer(customerObject);
     expect(result.length).toBe(1);
-    expect(result[0].firstName).toBe(customerSampleData[0].firstName);
-    expect(result[0].lastName).toBe(customerSampleData[0].lastName);
+    expect(result[0].firstName).toBe(customerObject.firstName);
+    expect(result[0].lastName).toBe(customerObject.lastName);
   });
 
   test('add customers array', async () => {
     const customerArray = customerSampleData;
     const result = await addCustomer(customerArray);
     expect(result.length).toBe(19);
-    expect(result[0].firstName).toBe(customerSampleData[0].firstName);
-    expect(result[0].lastName).toBe(customerSampleData[0].lastName);
+    expect(result[0].firstName).toBe(customerArray[0].firstName);
+    expect(result[0].lastName).toBe(customerArray[0].lastName);
   });
 });
 

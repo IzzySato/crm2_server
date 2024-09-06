@@ -2,6 +2,16 @@
 
 const { ObjectId } = require('mongodb');
 
+const authTokenUser = {
+  firstName: 'Molly',
+  lastName: 'P',
+  companyId: new ObjectId('51e0373c6f35bd826f47e9a0'),
+  email: 'molly.p@gmail.com',
+  authProviderId: 'dwdvduwd778721',
+  permissions: ['read', 'write'],
+  active: true
+};
+
 const userSampleData = [
   {
     firstName: 'Joe',
@@ -24,5 +34,6 @@ const userSampleData = [
 ];
 
 module.exports = {
+  authTokenUser,
   userSampleData
 }

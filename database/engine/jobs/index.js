@@ -1,4 +1,5 @@
 'use strict';
+const { getDatabaseQuery } = require('../../../utils/getQuery');
 const handleDatabaseOperation = require('../../../utils/handleDatabaseOperation');
 const { JobModel } = require('../../models/Job');
 const { convertIdStringToObjectId } = require('../utils/convertObjectId');
@@ -65,52 +66,20 @@ const updateJob = async (_id, updateField) => {
 /**
  * handleDatabaseOperation is handling errors
  * get jobs for a page
- * @param { pageNum: number, length: number, sortBy: string, fields: string, searchBy: string} param0
- * @param { isCache: boolean } param1
+ * params.fields should be database fiels string e.g. 'jobType note state'
+ * @param { pageNum: number, length: number, sortBy: string, fields: string, searchBy: string}
+ * @param { isCache: boolean }
  * @returns
  */
-const getJobs = async (
-  {
-    pageNum = 1,
-    length = 10,
-    sortBy = '_id',
-    fields = 'jobType note state startDate endDate customerId products',
-    searchBy = '',
-  },
-  { isCache = false }
-) => {
+const getJobs = async (params, { isCache = false }) => {
   return handleDatabaseOperation(async () => {
-    const findObj =
-      searchBy === ''
-        ? {}
-        : {
-            $or: [
-              { jobType: { $regex: searchBy, $options: 'i' } },
-              { state: { $regex: searchBy, $options: 'i' } },
-              { products: { $regex: searchBy, $options: 'i' } },
-              { startDate: { $regex: searchBy, $options: 'i' } },
-              { endDate: { $regex: searchBy, $options: 'i' } },
-              { note: { $regex: searchBy, $options: 'i' } },
-            ],
-          };
-    const baseQuery = JobModel.where({ deletedAt: null }).find(findObj);
-    const total = await JobModel.where({ deletedAt: null })
-      .find(findObj)
-      .countDocuments();
-    const query = baseQuery
-      .skip((parseInt(pageNum) - 1) * parseInt(length))
-      .sort(sortBy)
-      .limit(parseInt(length))
-      .select(fields);
-    if (isCache) {
-      const data = await query.cache(
-        `Job_${searchBy}_${pageNum}_${fields}_${length}_${sortBy}`
-      );
-      return { data, total };
-    } else {
-      const data = await query;
-      return { data, total };
-    }
+    const filterByArray = ['jobType', 'state', 'note'];
+    return await getDatabaseQuery({
+      model: JobModel,
+      params,
+      filterByArray,
+      isCache,
+    });
   });
 };
 

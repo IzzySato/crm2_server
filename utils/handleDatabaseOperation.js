@@ -3,6 +3,11 @@ const ValidationError = require('../errors/ValidationError');
 const CustomError = require('../errors/CustomError');
 const logger = require('../lib/logger');
 
+/**
+ * Wapper for database operation to handle errors
+ * @param {*} operation database function
+ * @returns database results
+ */
 const handleDatabaseOperation = async (operation) => {
   try {
     return await operation();

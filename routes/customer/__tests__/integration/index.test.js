@@ -1,29 +1,33 @@
 'use strict';
 const { describe, test } = require('@jest/globals');
 const request = require('supertest');
-const { setup, addUserGetToken } = require('../../../../database/testUtils/setup');
+const {
+  setup,
+  addUserGetToken,
+} = require('../../../../database/testUtils/setup');
 const {
   customerSampleData,
 } = require('../../../../database/testUtils/testData/customerData');
 const app = require('../../../../app');
-const {
-  addCustomer,
-} = require('../../../../database/engine/customer');
+const { addCustomer } = require('../../../../database/engine/customer');
 const { CustomerModel } = require('../../../../database/models/Customer');
 const { UserModel } = require('../../../../database/models/User');
 
-let token = ''
+let token = '';
+let authUserId = '';
 
 beforeAll(async () => {
   setup.turnOffCache();
-  token = await addUserGetToken();
+  const result = await addUserGetToken();
+  token = result.token;
+  authUserId = result.userId
 });
 afterAll(async () => {
   await setup.afterAll();
 });
 beforeEach(async () => {
   await CustomerModel.deleteMany({});
-  await UserModel.deleteMany({});
+  await UserModel.deleteOne({ _id: authUserId });
 });
 
 describe('GET Customer routes', () => {
@@ -41,6 +45,22 @@ describe('GET Customer routes', () => {
       .set('authorization', `Bearer ${token}`)
       .expect(200);
     expect(response.body.firstName).toBe(customers[0].firstName);
+  });
+
+  test('GET /customer/:id not exsist customer id', async () => {
+    const notExistCustomerId = '66d8d38041c908d46609a388';
+    await request(app)
+      .get(`/customer/${notExistCustomerId}`)
+      .set('authorization', `Bearer ${token}`)
+      .expect(404);
+  });
+
+  test('GET /customer/:id invalid customer id', async () => {
+    const invalidCustomerId = 'invalid_id';
+    await request(app)
+      .get(`/customer/${invalidCustomerId}`)
+      .set('authorization', `Bearer ${token}`)
+      .expect(400);
   });
 });
 
@@ -63,5 +83,53 @@ describe('POST Customer routes', () => {
       .expect(200);
     expect(response.body.total).toBe(1);
     expect(response.body.data[0].firstName).toBe(newCustomer.firstName);
+  });
+
+  test('POST /customer missing required body field', async () => {
+    const customerObject = {
+      firstName: 'Izzy',
+      phone: '123-235-7388',
+    };
+    const response = await request(app)
+      .post('/customer')
+      .send(customerObject)
+      .set('Accept', 'application/json')
+      .set('authorization', `Bearer ${token}`)
+      .expect(400);
+    expect(response.body.status).toEqual('fail');
+    expect(response.body.message).toEqual('Missing field lastName');
+  });
+});
+
+describe('PUT Customer routes', () => {
+  test('PUT /customer/:id update firstName', async () => {
+    const addedCustomer = await CustomerModel.create(customerSampleData[0]);
+    const response = await request(app)
+      .put(`/customer/${addedCustomer._id.toString()}`)
+      .send({ firstName: 'updated_name' })
+      .set('Accept', 'application/json')
+      .set('authorization', `Bearer ${token}`)
+      .expect(200);
+    expect(response.body.firstName).toEqual('updated_name');
+  });
+
+  test('PUT /customer/:id invalid customer id', async () => {
+    const invalidId = 'invalid_customer_id';
+    await request(app)
+      .put(`/customer/${invalidId}`)
+      .send({ firstName: 'firstname' })
+      .set('Accept', 'application/json')
+      .set('authorization', `Bearer ${token}`)
+      .expect(400);
+  });
+
+  test('PUT /customer/:id not exist customer id', async () => {
+    const notExistId = '66d8d38041c908d46609a388';
+    await request(app)
+      .put(`/customer/${notExistId}`)
+      .send({ firstName: 'firstname' })
+      .set('Accept', 'application/json')
+      .set('authorization', `Bearer ${token}`)
+      .expect(404);
   });
 });

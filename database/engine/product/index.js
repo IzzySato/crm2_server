@@ -1,5 +1,6 @@
 'use strict';
 const { deleteImage } = require('../../../lib/s3');
+const { getDatabaseQuery } = require('../../../utils/getQuery');
 const handleDatabaseOperation = require('../../../utils/handleDatabaseOperation');
 const { ProductModel } = require('../../models/Product');
 const { convertIdStringToObjectId } = require('../utils/convertObjectId');
@@ -8,7 +9,7 @@ const { convertIdStringToObjectId } = require('../utils/convertObjectId');
  * handleDatabaseOperation is handling errors
  * Insert Products
  * @param {*} products array of products or product object
- * @return { total: number, data: [Product] }
+ * @return array of users
  */
 const addProduct = async (products) => {
   return handleDatabaseOperation(async () => {
@@ -35,58 +36,31 @@ const addProduct = async (products) => {
  * handleDatabaseOperation is handling errors
  * @param {*} _id string
  * @param {*} isCache boolean
- * @returns
+ * @returns product object with the id
  */
 const getProductById = async (_id) => {
-  return handleDatabaseOperation(async () => await ProductModel.findOne({ _id }));
+  return handleDatabaseOperation(
+    async () => await ProductModel.findOne({ _id })
+  );
 };
 
 /**
  * handleDatabaseOperation is handling errors
- * @param {*} param0 params
- * @param {*} param1 cache
- * @returns products array
+ * params.field e.g. 'name sku categoryTags description'
+ * params.sortBy e.g. '_id'
+ * @param { pageNum: number, length: number, sortBy: string, fields: string, searchBy: string }
+ * @param { isCache: boolean }
+ * @returns { total, data } total non filtered products number and filtered product data
  */
-const getProducts = async (
-  {
-    pageNum = 1,
-    length = 10,
-    sortBy = '_id',
-    fields = 'name sku categoryTags description',
-    searchBy = '',
-  },
-  { isCache = false }
-) => {
+const getProducts = async (params, { isCache = false }) => {
   return handleDatabaseOperation(async () => {
-    const findObj =
-      searchBy === ''
-        ? {}
-        : {
-            $or: [
-              { name: { $regex: searchBy, $options: 'i' } },
-              { sku: { $regex: searchBy, $options: 'i' } },
-              { categoryTags: { $regex: searchBy, $options: 'i' } },
-              { description: { $regex: searchBy, $options: 'i' } },
-            ],
-          };
-    const baseQuery = ProductModel.where({ deletedAt: null }).find(findObj);
-    const total = await ProductModel.where({ deletedAt: null })
-      .find(findObj)
-      .countDocuments();
-    const query = baseQuery
-      .skip((parseInt(pageNum) - 1) * parseInt(length))
-      .sort(sortBy)
-      .limit(parseInt(length))
-      .select(fields);
-    if (isCache) {
-      const data = await query.cache(
-        `products_${searchBy}_${pageNum}_${fields}_${length}_${sortBy}`
-      );
-      return { data, total };
-    } else {
-      const data = await query;
-      return { data, total };
-    }
+    const filterByArray = ['name', 'sku', 'categoryTags', 'description'];
+    return await getDatabaseQuery({
+      model: ProductModel,
+      params,
+      filterByArray,
+      isCache,
+    });
   });
 };
 

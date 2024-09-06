@@ -1,4 +1,5 @@
 'use strict';
+const { getDatabaseQuery } = require('../../../utils/getQuery');
 const handleDatabaseOperation = require('../../../utils/handleDatabaseOperation');
 const { CustomerModel } = require('../../models/Customer');
 const { convertIdStringToObjectId } = require('../utils/convertObjectId');
@@ -51,50 +52,21 @@ const updateCustomer = async (_id, updateField) => {
 
 /**
  * handleDatabaseOperation is handling errors
- * @param {*} param0 params
- * @param {*} param1 cache options
- * @returns customers array
+ * params.sortBy e.g. '_id'
+ * params.fields should be database fiels string e.g. 'firstName lastName email phone _id'
+ * @param { pageNum: number, length: number, sortBy: string, fields: string, searchBy: string}
+ * @param { isCache: boolean }
+ * @returns
  */
-const getCustomers = async (
-  {
-    pageNum = 1,
-    length = 10,
-    sortBy = '_id',
-    fields = 'firstName lastName email phone _id',
-    searchBy = '',
-  },
-  { isCache = false }
-) => {
+const getCustomers = async (params, { isCache = false }) => {
   return handleDatabaseOperation(async () => {
-    const findObj =
-      searchBy === ''
-        ? {}
-        : {
-            $or: [
-              { firstName: { $regex: searchBy, $options: 'i' } },
-              { lastName: { $regex: searchBy, $options: 'i' } },
-              { email: { $regex: searchBy, $options: 'i' } },
-              { phone: { $regex: searchBy, $options: 'i' } },
-            ],
-          };
-    const baseQuery = CustomerModel.where({ deletedAt: null }).find(findObj);
-    const total = await CustomerModel.where({ deletedAt: null })
-      .find(findObj)
-      .countDocuments();
-    const query = baseQuery
-      .skip((parseInt(pageNum) - 1) * parseInt(length))
-      .sort(sortBy)
-      .limit(parseInt(length))
-      .select(fields);
-    if (isCache) {
-      const data = await query.cache(
-        `customers_${searchBy}_${pageNum}_${fields}_${length}_${sortBy}`
-      );
-      return { data, total };
-    } else {
-      const data = await query;
-      return { data, total };
-    }
+    const filterByArray = ['firstName', 'lastName', 'email', 'phone'];
+    return await getDatabaseQuery({
+      model: CustomerModel,
+      params,
+      filterByArray,
+      isCache,
+    });
   });
 };
 

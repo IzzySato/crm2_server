@@ -10,16 +10,19 @@ const { AddressModel } = require('../../../../database/models/Address');
 const { UserModel } = require('../../../../database/models/User');
 
 let token = ''
+let authUserId = '';
 
 beforeAll(async () => {
   setup.turnOffCache();
-  token = await addUserGetToken();
+  const result = await addUserGetToken();
+  token = result.token;
+  authUserId = result.userId
 });
 afterAll(async () => {
   await setup.afterAll();
 });
 beforeEach(async () => {
-  await UserModel.deleteMany({});
+  await UserModel.deleteOne({ _id: authUserId });
   await AddressModel.deleteMany({});
 });
 
@@ -36,16 +39,17 @@ describe('GET Address routes', () => {
   });
 
   test('GET /address/:id not exsist address id', async () => {
-    // 66d8d38041c908d46609a388 is not address id
+    const notExistAddressId = '66d8d38041c908d46609a388';
     await request(app)
-      .get('/address/66d8d38041c908d46609a388')
+      .get(`/address/${notExistAddressId}`)
       .set('authorization', `Bearer ${token}`)
       .expect(404);
   });
 
   test('GET /address/:id invalid address id', async () => {
+    const invalidAddressId = 'invalid_id';
     await request(app)
-      .get('/address/invalid_id')
+      .get(`/address/${invalidAddressId}`)
       .set('authorization', `Bearer ${token}`)
       .expect(400);
   });
@@ -94,8 +98,9 @@ describe('PUT Address routes', () => {
   });
 
   test('PUT /address/:id invalid address id', async () => {
+    const invalidAddressId = 'invalid_address_id';
     await request(app)
-      .put('/address/invalid_address_id')
+      .put(`/address/${invalidAddressId}`)
       .send({ line1: 'new line' })
       .set('Accept', 'application/json')
       .set('authorization', `Bearer ${token}`)
@@ -103,9 +108,9 @@ describe('PUT Address routes', () => {
   });
 
   test('PUT /address/:id not exist address id', async () => {
-    // 66d8d38041c908d46609a388 is not address id
+    const notExistId = '66d8d38041c908d46609a388';
     await request(app)
-      .put('/address/66d8d38041c908d46609a388')
+      .put(`/address/${notExistId}`)
       .send({ line1: 'new line' })
       .set('Accept', 'application/json')
       .set('authorization', `Bearer ${token}`)

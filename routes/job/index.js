@@ -41,7 +41,7 @@ router.get('/:id', authenticateJWT, async (req, res) => {
   }
 });
 
-router.post('/', authenticateJWT, async (req, res) => {
+router.post('/', authenticateJWT, async (req, res, next) => {
   try {
     const job = req.body;
     const requiredFiels = [
@@ -55,7 +55,7 @@ router.post('/', authenticateJWT, async (req, res) => {
     });
     const data = await addJob(job);
     res.json({
-      total: data.total,
+      total: data.length,
       data: data.map(jobResultSchema)
     });
   } catch (error) {
@@ -63,7 +63,7 @@ router.post('/', authenticateJWT, async (req, res) => {
   }
 });
 
-router.put('/:id', authenticateJWT, async (req, res) => {
+router.put('/:id', authenticateJWT, async (req, res, next) => {
   try {
     const id = req.params.id;
     const updateObj = req.body;

@@ -1,6 +1,5 @@
 'use strict';
 const express = require('express');
-const createError = require('http-errors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
@@ -19,6 +18,17 @@ const loadEnv = require('./config/env.js');
 const { ENV } = require('./constants/env.js');
 const { ROUTES } = require('./constants/routes.js');
 const { errorHandling } = require('./middlewares/errorHandling.js');
+const { ROUTE_NOT_FOUND, SESSION_STORE } = require('./constants/errorMessage.js');
+const MongoDBStore = require('connect-mongodb-session')(session);
+
+const store = new MongoDBStore({
+  uri: process.env.MONGODB_URI,
+  collection: 'sessions'
+});
+
+store.on('error', function(error) {
+  console.error(SESSION_STORE, error);
+});
 
 loadEnv();
 
@@ -28,6 +38,7 @@ require('./lib/cache.js');
 
 app.use(
   session({
+    store,
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
@@ -87,7 +98,7 @@ app.use(ROUTES.JWT.BASE, jwtRouter);
 app.use(errorHandling);
 
 app.use((req, res, next) => {
-  next(createError(404));
+  res.status(404).json({ message: ROUTE_NOT_FOUND });
 });
 
 module.exports = app;

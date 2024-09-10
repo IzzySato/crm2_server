@@ -14,4 +14,6 @@ module.exports = {
   INVALID_REQUEST_DATA: 'Invalid request data',
   INTERNAL_SERVER: 'Internal Server Error',
   DEV_ONLY: 'Development only endpoint',
+  ROUTE_NOT_FOUND: 'Route not found',
+  SESSION_STORE: 'Session store error'
 };

@@ -21,6 +21,10 @@ const { errorHandling } = require('./middlewares/errorHandling.js');
 const { ROUTE_NOT_FOUND, SESSION_STORE } = require('./constants/errorMessage.js');
 const MongoDBStore = require('connect-mongodb-session')(session);
 
+loadEnv();
+
+const app = express();
+
 const store = new MongoDBStore({
   uri: process.env.MONGODB_URI,
   collection: 'sessions'
@@ -29,10 +33,6 @@ const store = new MongoDBStore({
 store.on('error', function(error) {
   console.error(SESSION_STORE, error);
 });
-
-loadEnv();
-
-const app = express();
 
 require('./lib/cache.js');
 

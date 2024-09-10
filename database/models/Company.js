@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { dbConnect } = require('../dbConfig');
+const { MODEL_NAME } = require('../../constants/modelName');
 
 const CompanySchema = new mongoose.Schema({
   businessName: {
@@ -8,7 +9,7 @@ const CompanySchema = new mongoose.Schema({
   },
   addressIds: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Address',
+    ref: MODEL_NAME.ADDRESS,
   },
   phone: {
     type: String,
@@ -30,5 +31,5 @@ const CompanySchema = new mongoose.Schema({
 });
 
 module.exports = {
-  CompanyModel: dbConnect().model('Company', CompanySchema)
+  CompanyModel: dbConnect().model(MODEL_NAME.COMPABY, CompanySchema),
 };

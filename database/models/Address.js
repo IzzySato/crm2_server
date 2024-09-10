@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { dbConnect } = require('../dbConfig');
+const { MODEL_NAME } = require('../../constants/modelName');
 
 const AddressSchema = new mongoose.Schema({
   name: {
@@ -40,5 +41,5 @@ const AddressSchema = new mongoose.Schema({
 });
 
 module.exports = {
-  AddressModel: dbConnect().model('Address', AddressSchema)
+  AddressModel: dbConnect().model(MODEL_NAME.ADDRESS, AddressSchema)
 };

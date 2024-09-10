@@ -10,6 +10,8 @@ const {
 const jobResultSchema = require('../../schemas/jobResultSchema');
 const { validateInputs } = require('../../validation');
 const NotFoundError = require('../../errors/NotFoundError');
+const { JOB_NOT_FOUND } = require('../../constants/errorMessage');
+const { REQUIRED_FIELDS } = require('../../constants/requiredFields');
 const router = express.Router();
 
 router.get('/', authenticateJWT, async (req, res, next) => {
@@ -33,7 +35,7 @@ router.get('/:id', authenticateJWT, async (req, res) => {
     const id = req.params.id;
     const result = await getJobById(id);
     if (!result) {
-      throw new NotFoundError(`Job with ID ${id}`);
+      throw new NotFoundError(JOB_NOT_FOUND);
     }
     res.json(jobResultSchema(result));
   } catch (error) {
@@ -44,14 +46,10 @@ router.get('/:id', authenticateJWT, async (req, res) => {
 router.post('/', authenticateJWT, async (req, res, next) => {
   try {
     const job = req.body;
-    const requiredFiels = [
-      { name: 'jobType', type: 'string' },
-      { name: 'state', type: 'string' },
-    ];
+    const requiredFiels = REQUIRED_FIELDS.JOB;
     validateInputs({
       requiredFiels,
-      bodyData: job,
-      modelName: 'Job',
+      bodyData: job
     });
     const data = await addJob(job);
     res.json({
@@ -69,7 +67,7 @@ router.put('/:id', authenticateJWT, async (req, res, next) => {
     const updateObj = req.body;
     const result = await updateJob(id, updateObj);
     if (!result) {
-      throw new NotFoundError(`Job with ID ${id}`);
+      throw new NotFoundError(JOB_NOT_FOUND);
     }
     res.json(jobResultSchema(result));
   } catch (error) {

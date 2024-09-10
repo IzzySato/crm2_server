@@ -16,19 +16,19 @@ const addCustomer = async (customers) => {
       customers = customers.map((customer) => {
         return {
           ...customer,
-          addresses: customer.addresses.map((address) =>
+          addresses: customer.addresses ? customer.addresses.map((address) =>
             convertIdStringToObjectId(address)
-          ),
-          companyId: convertIdStringToObjectId(customer.companyId),
+          ) : [],
+          companyId: customer.companyId ? convertIdStringToObjectId(customer.companyId) : null,
         };
       });
     } else {
       customers = {
         ...customers,
-        addresses: customers.addresses.map((address) =>
+        addresses: customers.addresses ? customers.addresses.map((address) =>
           convertIdStringToObjectId(address)
-        ),
-        companyId: convertIdStringToObjectId(customers.companyId),
+        ) : [],
+        companyId: customers.companyId ? convertIdStringToObjectId(customers.companyId) : null,
       };
     }
     return await CustomerModel.insertMany(customers);

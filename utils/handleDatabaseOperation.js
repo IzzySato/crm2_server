@@ -2,6 +2,8 @@
 const ValidationError = require('../errors/ValidationError');
 const CustomError = require('../errors/CustomError');
 const logger = require('../lib/logger');
+const { INVALID_ID_FORMAT, DATABASE_ERROR } = require('../constants/errorMessage');
+const { CAST_ERROR } = require('../constants/mongoError');
 
 /**
  * Wapper for database operation to handle errors
@@ -13,10 +15,10 @@ const handleDatabaseOperation = async (operation) => {
     return await operation();
   } catch (error) {
     logger.error(error.toString());
-    if (error.name === 'CastError') {
-      throw new ValidationError(`Invalid ID format`);
+    if (error.name === CAST_ERROR) {
+      throw new ValidationError(INVALID_ID_FORMAT);
     }
-    throw new CustomError('Database error occurred', 500);
+    throw new CustomError(DATABASE_ERROR, 500);
   }
 };
 

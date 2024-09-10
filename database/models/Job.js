@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { dbConnect } = require('../dbConfig');
+const { MODEL_NAME } = require('../../constants/modelName');
 
 const JobSchema = new mongoose.Schema({
   jobType: {
@@ -21,15 +22,15 @@ const JobSchema = new mongoose.Schema({
   },
   customerId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Customer',
+    ref: MODEL_NAME.CUSTOMER,
   },
   products: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Product',
+    ref: MODEL_NAME.PRODUCT,
   },
   companyId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Company',
+    ref: MODEL_NAME.COMPABY,
   },
   createdAt: {
     type: Date,
@@ -42,5 +43,5 @@ const JobSchema = new mongoose.Schema({
 });
 
 module.exports = {
-  JobModel: dbConnect().model('Job', JobSchema)
+  JobModel: dbConnect().model(MODEL_NAME.JOB, JobSchema)
 };

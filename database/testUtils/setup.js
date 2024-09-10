@@ -1,7 +1,7 @@
 'use strict';
 const mongoose = require('mongoose');
 const logger = require('../../lib/logger');
-const { userSampleData, authTokenUser } = require('./testData/userDara');
+const { authTokenUser } = require('./testData/userDara');
 const { generateJwtToken } = require('../../lib/jwt');
 const loadEnv = require('../../config/env');
 const { dbConnect } = require('../dbConfig');

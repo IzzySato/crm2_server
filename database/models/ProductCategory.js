@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { dbConnect } = require('../dbConfig');
+const { MODEL_NAME } = require('../../constants/modelName');
 
 const ProductCategorySchema = new mongoose.Schema({
   name: {
@@ -15,7 +16,7 @@ const ProductCategorySchema = new mongoose.Schema({
   },
   companyId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Company',
+    ref: MODEL_NAME.COMPABY,
     required: true,
   },
   active: {
@@ -33,7 +34,7 @@ const ProductCategorySchema = new mongoose.Schema({
 
 module.exports = {
   ProductCategoryModel: dbConnect().model(
-    'ProductCategory',
+    MODEL_NAME.PRODUCT_CATEGORY,
     ProductCategorySchema
   ),
 };

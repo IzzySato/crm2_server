@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 const { dbConnect } = require('../dbConfig');
+const { MODEL_NAME } = require('../../constants/modelName');
 
 const PermissionRequestSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: MODEL_NAME.USER,
     required: true,
   },
   permissionRequested: {
@@ -15,7 +16,7 @@ const PermissionRequestSchema = new mongoose.Schema({
   },
   approvingUserId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: MODEL_NAME.USER,
   },
   dateActioned: {
     type: String,
@@ -34,7 +35,7 @@ module.exports = PermissionRequestSchema;
 
 module.exports = {
   PermissionRequestModel: dbConnect().model(
-    'PermissionRequest',
+    MODEL_NAME.PERMISSION_REQUEST,
     PermissionRequestSchema
   ),
 };

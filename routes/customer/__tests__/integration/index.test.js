@@ -12,6 +12,8 @@ const app = require('../../../../app');
 const { addCustomer } = require('../../../../database/engine/customer');
 const { CustomerModel } = require('../../../../database/models/Customer');
 const { UserModel } = require('../../../../database/models/User');
+const { MISSING_REQUIRED_FIELDS } = require('../../../../constants/errorMessage');
+const { STATUS } = require('../../../../constants/status');
 
 let token = '';
 let authUserId = '';
@@ -96,8 +98,8 @@ describe('POST Customer routes', () => {
       .set('Accept', 'application/json')
       .set('authorization', `Bearer ${token}`)
       .expect(400);
-    expect(response.body.status).toEqual('fail');
-    expect(response.body.message).toEqual('Missing field lastName');
+    expect(response.body.status).toEqual(STATUS.FAIL);
+    expect(response.body.message).toEqual(MISSING_REQUIRED_FIELDS);
   });
 });
 

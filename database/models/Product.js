@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { dbConnect } = require('../dbConfig');
+const { MODEL_NAME } = require('../../constants/modelName');
 
 const ProductSchema = new mongoose.Schema({
   name: {
@@ -21,7 +22,7 @@ const ProductSchema = new mongoose.Schema({
   },
   companyId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Company',
+    ref: MODEL_NAME.COMPABY,
   },
   createdAt: {
     type: Date,
@@ -36,5 +37,5 @@ const ProductSchema = new mongoose.Schema({
 });
 
 module.exports = {
-  ProductModel: dbConnect().model('Product', ProductSchema)
+  ProductModel: dbConnect().model(MODEL_NAME.PRODUCT, ProductSchema)
 };

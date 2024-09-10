@@ -2,7 +2,6 @@
 const express = require('express');
 const {
   addUser,
-  deleteUser,
   updateUser,
   getUserById,
 } = require('../../database/engine/user');
@@ -10,6 +9,9 @@ const { authenticateJWT } = require('../../middlewares/auth');
 const userResultSchema = require('../../schemas/userResultSchema');
 const NotFoundError = require('../../errors/NotFoundError');
 const { validateInputs } = require('../../validation');
+const { USER_NOT_FOUND, DEV_ONLY } = require('../../constants/errorMessage');
+const { REQUIRED_FIELDS } = require('../../constants/requiredFields');
+const { ENV } = require('../../constants/env');
 const router = express.Router();
 
 router.get('/:id', authenticateJWT, async (req, res, next) => {
@@ -17,7 +19,7 @@ router.get('/:id', authenticateJWT, async (req, res, next) => {
     const id = req.params.id;
     const result = await getUserById(id);
     if (!result) {
-      throw new NotFoundError(`User with ID ${id}`);
+      throw new NotFoundError(USER_NOT_FOUND);
     }
     res.json(userResultSchema(result));
   } catch (error) {
@@ -25,18 +27,17 @@ router.get('/:id', authenticateJWT, async (req, res, next) => {
   }
 });
 
-router.post('/', authenticateJWT, async (req, res, next) => {
+// Use this for development
+router.post('/', async (req, res, next) => {
   try {
+    if (process.env.NODE_MODE === ENV.PRODUCTION.NAME) {
+      return res.status(400).json({ message: DEV_ONLY });
+    }
     const user = req.body;
-    const requiredFiels = [
-      { name: 'firstName', type: 'string' },
-      { name: 'lastName', type: 'string' },
-      { name: 'email', type: 'string' },
-    ];
+    const requiredFiels = REQUIRED_FIELDS.USER;
     validateInputs({
       requiredFiels,
-      bodyData: user,
-      modelName: 'User',
+      bodyData: user
     });
     const data = await addUser(user);
     res.json({
@@ -54,7 +55,7 @@ router.put('/:id', authenticateJWT, async (req, res, next) => {
     const updateObj = req.body;
     const result = await updateUser(id, updateObj);
     if (!result) {
-      throw new NotFoundError(`User with ID ${id}`);
+      throw new NotFoundError(USER_NOT_FOUND);
     }
     res.json(userResultSchema(result));
   } catch (error) {

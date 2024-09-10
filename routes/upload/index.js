@@ -4,10 +4,11 @@ const { authenticateJWT } = require('../../middlewares/auth');
 const router = express.Router();
 const multer = require('multer');
 const { uploadImage } = require('../../lib/s3');
+const { ROUTES } = require('../../constants/routes');
 const upload = multer();
 
 router.put(
-  '/product',
+  ROUTES.UPLOAD.PRODUCT,
   authenticateJWT,
   upload.single('file'),
   async (req, res, next) => {

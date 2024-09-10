@@ -17,7 +17,6 @@ beforeAll(async () => {
   setup.turnOffCache();
   const result = await addUserGetToken();
   token = result.token;
-  authUserId = result.userId
 });
 afterAll(async () => {
   await setup.afterAll();
@@ -84,7 +83,6 @@ describe('PUT User routes', () => {
   test('PUT /user/:id', async () => {
     const userObject = userSampleData[0];
     const user = await UserModel.create(userObject);
-    console.log('token', token)
     const response = await request(app)
       .put(`/user/${user._id.toString()}`)
       .send({ lastName: 'new lastName' })

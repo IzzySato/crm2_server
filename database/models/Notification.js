@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { dbConnect } = require('../dbConfig');
+const { MODEL_NAME } = require('../../constants/modelName');
 
 const NotificationSchema = new mongoose.Schema({
   type: {
@@ -9,15 +10,15 @@ const NotificationSchema = new mongoose.Schema({
   payload: mongoose.Schema.Types.Mixed,
   read: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'User',
+    ref: MODEL_NAME.USER,
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: MODEL_NAME.USER,
   },
   companyId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Company',
+    ref: MODEL_NAME.COMPABY,
   },
   createdAt: {
     type: Date,
@@ -32,5 +33,5 @@ const NotificationSchema = new mongoose.Schema({
 module.exports = NotificationSchema;
 
 module.exports = {
-  NotificationModel: dbConnect().model('Notification', NotificationSchema)
+  NotificationModel: dbConnect().model(MODEL_NAME.NOTIFICATION, NotificationSchema)
 };

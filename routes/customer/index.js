@@ -11,6 +11,9 @@ const cleanCache = require('../../middlewares/cleanCache');
 const customerResultSchema = require('../../schemas/customerResultSchema');
 const { validateInputs } = require('../../validation');
 const NotFoundError = require('../../errors/NotFoundError');
+const { CUSTOMER_NOT_FOUND } = require('../../constants/errorMessage');
+const { REQUIRED_FIELDS } = require('../../constants/requiredFields');
+const { MODEL_NAME } = require('../../constants/modelName');
 const router = express.Router();
 
 router.get('/', authenticateJWT, async (req, res, next) => {
@@ -34,7 +37,7 @@ router.get('/:id', authenticateJWT, async (req, res, next) => {
     const id = req.params.id;
     const result = await getCustomerById(id);
     if (!result) {
-      throw new NotFoundError(`Customer with ID ${id} not found`);
+      throw new NotFoundError(CUSTOMER_NOT_FOUND);
     }
     res.json(customerResultSchema(result));
   } catch (error) {
@@ -45,18 +48,12 @@ router.get('/:id', authenticateJWT, async (req, res, next) => {
 router.post('/', authenticateJWT, cleanCache, async (req, res, next) => {
   try {
     const customer = req.body;
-    const requiredFiels = [
-      { name: 'firstName', type: 'string' },
-      { name: 'lastName', type: 'string' },
-      { name: 'email', type: 'string' },
-      { name: 'phone', type: 'string' },
-    ];
+    const requiredFiels = REQUIRED_FIELDS.CUSTOMER;
     validateInputs({
       requiredFiels,
-      bodyData: customer,
-      modelName: 'Customer',
+      bodyData: customer
     });
-    req.cache_key = 'customers_';
+    req.cache_key = MODEL_NAME.CUSTOMER;
     const data = await addCustomer(customer);
     res.json({
       total: data.length,
@@ -67,13 +64,14 @@ router.post('/', authenticateJWT, cleanCache, async (req, res, next) => {
   }
 });
 
-router.put('/:id', authenticateJWT, async (req, res, next) => {
+router.put('/:id', authenticateJWT, cleanCache, async (req, res, next) => {
   try {
+    req.cache_key = MODEL_NAME.CUSTOMER;
     const id = req.params.id;
     const updateObj = req.body;
     const result = await updateCustomer(id, updateObj);
     if (!result) {
-      throw new NotFoundError(`Customer with ID ${id}`);
+      throw new NotFoundError(CUSTOMER_NOT_FOUND);
     }
     res.json(customerResultSchema(result));
   } catch (error) {

@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 const { dbConnect } = require('../dbConfig');
+const { MODEL_NAME } = require('../../constants/modelName');
 
 const InvitationSchema = new mongoose.Schema({
   invitedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: MODEL_NAME.USER,
     required: true,
   },
   email: {
@@ -17,7 +18,7 @@ const InvitationSchema = new mongoose.Schema({
   },
   companyId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Company',
+    ref: MODEL_NAME.COMPABY,
     required: true,
   },
   permissions: {
@@ -34,5 +35,5 @@ const InvitationSchema = new mongoose.Schema({
 });
 
 module.exports = {
-  InvitationModel: dbConnect().model('Invitation', InvitationSchema)
+  InvitationModel: dbConnect().model(MODEL_NAME.INVITATION, InvitationSchema)
 };

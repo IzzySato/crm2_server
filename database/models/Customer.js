@@ -1,6 +1,7 @@
 'use strict';
 const mongoose = require('mongoose');
 const { dbConnect } = require('../dbConfig');
+const { MODEL_NAME } = require('../../constants/modelName');
 
 const CustomerSchema = new mongoose.Schema({
   firstName: {
@@ -21,14 +22,14 @@ const CustomerSchema = new mongoose.Schema({
   },
   addresses: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Address',
+    ref: MODEL_NAME.ADDRESS,
   },
   tags: {
     type: [String],
   },
   companyId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Company',
+    ref: MODEL_NAME.COMPABY,
   },
   createdAt: {
     type: Date,
@@ -41,5 +42,5 @@ const CustomerSchema = new mongoose.Schema({
 });
 
 module.exports = {
-  CustomerModel: dbConnect().model('Customer', CustomerSchema)
+  CustomerModel: dbConnect().model(MODEL_NAME.CUSTOMER, CustomerSchema)
 };

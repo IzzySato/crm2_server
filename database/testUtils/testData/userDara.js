@@ -9,7 +9,7 @@ const authTokenUser = {
   email: 'molly.p@gmail.com',
   authProviderId: 'dwdvduwd778721',
   permissions: ['read', 'write'],
-  active: true
+  active: true,
 };
 
 const userSampleData = [
@@ -20,7 +20,7 @@ const userSampleData = [
     email: 'joe.smith@gmail.com',
     authProviderId: 'dwdvduwd778721',
     permissions: ['read', 'write'],
-    active: true
+    active: true,
   },
   {
     firstName: 'Alice',
@@ -29,11 +29,11 @@ const userSampleData = [
     email: 'alice.brown@gmail.com',
     authProviderId: '992726711',
     permissions: ['read', 'write'],
-    active: true
+    active: true,
   },
 ];
 
 module.exports = {
   authTokenUser,
-  userSampleData
-}
+  userSampleData,
+};

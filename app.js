@@ -16,7 +16,9 @@ const { dbConnect } = require('./database/dbConfig.js');
 const passport = require('passport');
 const session = require('express-session');
 const loadEnv = require('./config/env.js');
-const CustomError = require('./errors/CustomError.js');
+const { ENV } = require('./constants/env.js');
+const { ROUTES } = require('./constants/routes.js');
+const { errorHandling } = require('./middlewares/errorHandling.js');
 
 loadEnv();
 
@@ -31,7 +33,7 @@ app.use(
     saveUninitialized: true,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Set secure flag in production
+      secure: process.env.NODE_ENV === ENV.PRODUCTION.NAME,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
   })
@@ -73,33 +75,19 @@ app.use(
 // Database Connect
 dbConnect();
 
-app.use('/address', addressRouter);
-app.use('/auth', authRouter);
-app.use('/customer', customerRouter);
-app.use('/user', userRouter);
-app.use('/product', productRouter);
-app.use('/job', jobRouter);
-app.use('/upload', uploadRouter);
-app.use('/jwt', jwtRouter);
+app.use(ROUTES.ADDRESS.BASE, addressRouter);
+app.use(ROUTES.AUTH.BASE, authRouter);
+app.use(ROUTES.CUSTOMER.BASE, customerRouter);
+app.use(ROUTES.USER.BASE, userRouter);
+app.use(ROUTES.PRODUCT.BASE, productRouter);
+app.use(ROUTES.JOB.BASE, jobRouter);
+app.use(ROUTES.UPLOAD.BASE, uploadRouter);
+app.use(ROUTES.JWT.BASE, jwtRouter);
+
+app.use(errorHandling);
 
 app.use((req, res, next) => {
   next(createError(404));
-});
-
-app.use((err, req, res, next) => {
-  if (err instanceof CustomError) {
-    // Custom error handling
-    return res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message,
-    });
-  }
-  const statusCode = err.status || 500;
-  res.status(statusCode).json({
-    status: statusCode,
-    message: err.message || 'Internal Server Error',
-    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
-  });
 });
 
 module.exports = app;

@@ -11,6 +11,9 @@ const cleanCache = require('../../middlewares/cleanCache');
 const productResultSchema = require('../../schemas/productResultSchema');
 const { validateInputs } = require('../../validation');
 const NotFoundError = require('../../errors/NotFoundError');
+const { PRODUCT_NOT_FOUND } = require('../../constants/errorMessage');
+const { REQUIRED_FIELDS } = require('../../constants/requiredFields');
+const { MODEL_NAME } = require('../../constants/modelName');
 const router = express.Router();
 
 router.get('/', authenticateJWT, async (req, res, next) => {
@@ -34,7 +37,7 @@ router.get('/:id', authenticateJWT, async (req, res, next) => {
     const id = req.params.id;
     const result = await getProductById(id);
     if (!result) {
-      throw new NotFoundError(`Product with ID ${id}`);
+      throw new NotFoundError(PRODUCT_NOT_FOUND);
     }
     res.json(productResultSchema(result));
   } catch (error) {
@@ -45,16 +48,12 @@ router.get('/:id', authenticateJWT, async (req, res, next) => {
 router.post('/', authenticateJWT, cleanCache, async (req, res, next) => {
   try {
     const product = req.body;
-    const requiredFiels = [
-      { name: 'name', type: 'string' },
-      { name: 'sku', type: 'string' },
-    ];
+    const requiredFiels = REQUIRED_FIELDS.PRODUCT;
     validateInputs({
       requiredFiels,
-      bodyData: product,
-      modelName: 'Product',
+      bodyData: product
     });
-    req.cache_key = 'products_';
+    req.cache_key = MODEL_NAME.PRODUCT;
     const data = await addProduct(product);
     res.json({
       total: data.length,
@@ -65,14 +64,14 @@ router.post('/', authenticateJWT, cleanCache, async (req, res, next) => {
   }
 });
 
-router.put('/:id', authenticateJWT, async (req, res, next) => {
+router.put('/:id', authenticateJWT, cleanCache, async (req, res, next) => {
   try {
-    req.cache_key = 'products_';
+    req.cache_key = MODEL_NAME.PRODUCT;
     const id = req.params.id;
     const updateObj = req.body;
     const result = await updateProduct(id, updateObj);
     if (!result) {
-      throw new NotFoundError(`Product with ID ${id}`);
+      throw new NotFoundError(PRODUCT_NOT_FOUND);
     }
     res.json(productResultSchema(result));
   } catch (error) {
